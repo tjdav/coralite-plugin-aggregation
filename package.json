@@ -1,0 +1,27 @@
+{
+  "name": "coralite-plugin-aggregation",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "exports": {
+    ".": {
+      "default": "./src/index.js",
+      "types": "./types/index.js"
+    }
+  },
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.10.0",
+  "devDependencies": {
+    "@stylistic/eslint-plugin-js": "^4.2.0",
+    "@stylistic/eslint-plugin-plus": "^4.2.0"
+  },
+  "dependencies": {
+    "coralite": "^0.8.1",
+    "dom-serializer": "^2.0.0",
+    "htmlparser2": "^10.0.0"
+  }
+}
