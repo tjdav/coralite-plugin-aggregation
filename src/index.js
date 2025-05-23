@@ -8,7 +8,7 @@ import {
   createTextNode,
   parseHTMLMeta,
   createPlugin
-} from 'coralite'
+} from 'coralite/utils'
 
 /**
  * @typedef {Object} Aggregation
