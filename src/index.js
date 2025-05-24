@@ -11,9 +11,7 @@ import {
 } from 'coralite/utils'
 
 /**
- * @typedef {Object} Aggregation
- * @property {CoraliteAggregate[]} nodes - An array of CoraliteAnyNode objects representing the aggregated content nodes.
- * @property {HTMLData[]} [documents] - Optional array of HTMLData objects representing the documents associated with this aggregation.
+ * @import {Aggregation, CoraliteAggregate} from '#types'
  */
 
 export default createPlugin({
@@ -23,20 +21,9 @@ export default createPlugin({
    *
    * @param {CoraliteAggregate} options - Configuration object defining the aggregation behavior
    *
-   * @returns {Promise.<Aggregation>} Array of processed content nodes from aggregated documents
+   * @returns {Promise<Aggregation>} Array of processed content nodes from aggregated documents
    * @throws {Error} If pages directory path is undefined or aggregate path doesn't exist
    *
-   * @example
-   * ```javascript
-   * // Aggregating content from pages under 'components' directory into a component with id 'my-component'
-   * aggregate({
-   *   path: 'button',
-   *   recursive: true,
-   *   template: 'my-component'
-   * }, {
-   *   className: 'btn'
-   * }, components, document);
-   * ```
    */
   async method (options, { values, document, module, path }) {
     let optionPath = options.path
@@ -69,7 +56,7 @@ export default createPlugin({
 
     let pages = this.pages.getListByPath(optionPath)
 
-    if (!pages.length) {
+    if (!pages || !pages.length) {
       // Retrieve HTML pages from specified path
       const collection = await getHtmlFiles({
         type: 'page',
@@ -175,63 +162,71 @@ export default createPlugin({
     }
 
     for (let i = startIndex; i < endIndex; i++) {
-      const page = pages[i]
+      let page = pages[i]
 
-      if (page.path.filename !== document.path.filename) {
-        const meta = parseHTMLMeta(page.content)
-        const pageValues = Object.assign({
-          $pathname: page.path.pathname,
-          $filename: page.path.filename,
-          $dirname: page.path.dirname
-        }, values)
-        let prefix = '$'
+      if (page.path.filename === document.path.filename) {
+        // skip to next page
+        page = pages[++i]
 
-        // Process metadata and populate token values for rendering
-        for (const key in meta) {
-          if (Object.prototype.hasOwnProperty.call(meta, key)) {
-            const data = meta[key]
-            const content = []
+        if (!page) {
+          // exit loop
+          break
+        }
+      }
 
-            if (Array.isArray(data)) {
-              let prefixName
-              // Handle multiple metadata items as list
-              for (let i = 0; i < data.length; i++) {
-                const item = data[i]
-                let name = prefix + item.name
-                let suffix = ''
-                prefixName = name
+      const meta = parseHTMLMeta(page.content)
+      const pageValues = Object.assign({
+        $pathname: page.path.pathname,
+        $filename: page.path.filename,
+        $dirname: page.path.dirname
+      }, values)
+      let prefix = '$'
 
-                suffix = '_' + i
+      // Process metadata and populate token values for rendering
+      for (const key in meta) {
+        if (Object.prototype.hasOwnProperty.call(meta, key)) {
+          const data = meta[key]
+          const content = []
 
-                if (i === 0) {
-                  pageValues[name] = item.content
-                }
+          if (Array.isArray(data)) {
+            let prefixName
+            // Handle multiple metadata items as list
+            for (let i = 0; i < data.length; i++) {
+              const item = data[i]
+              let name = prefix + item.name
+              let suffix = ''
+              prefixName = name
 
-                pageValues[name + suffix] = item.content
+              suffix = '_' + i
 
-                content.push(item.content)
+              if (i === 0) {
+                pageValues[name] = item.content
               }
 
-              if (prefixName) {
-                pageValues[prefixName + '_list'] = content
-              }
-            } else {
-              pageValues[prefix + key] = data
+              pageValues[name + suffix] = item.content
+
+              content.push(item.content)
             }
+
+            if (prefixName) {
+              pageValues[prefixName + '_list'] = content
+            }
+          } else {
+            pageValues[prefix + key] = data
           }
         }
+      }
 
-        // Render component with current values and add to results
-        const component = await this.createComponent({
-          id: templateId,
-          values: pageValues,
-          document
-        })
+      // Render component with current values and add to results
+      const component = await this.createComponent({
+        id: templateId,
+        values: pageValues,
+        document
+      })
 
-        if (typeof component === 'object') {
-          // concat rendered components
-          result = result.concat(component.children)
-        }
+      if (typeof component === 'object') {
+        // concat rendered components
+        result = result.concat(component.children)
       }
     }
 
