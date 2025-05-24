@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Build database free coralite websites",
   "scripts": {
-    "html": "coralite -t ./tests/fixtures/templates -p ./tests/fixtures/pages -o ./dist",
+    "html": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
     "test-e2e": "playwright test",
     "test-e2e-report": "playwright show-report",
     "test-e2e-ui": "playwright test --ui",
@@ -32,7 +32,7 @@
     }
   },
   "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
@@ -40,8 +40,10 @@
     "sirv-cli": "^3.0.1"
   },
   "dependencies": {
-    "coralite": "^0.9.0",
     "dom-serializer": "^2.0.0",
     "htmlparser2": "^10.0.0"
+  },
+  "peerDependencies": {
+    "coralite": "^0.9.0"
   }
 }
