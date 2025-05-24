@@ -1,7 +1,7 @@
 {
   "name": "coralite-plugin-aggregation",
   "version": "0.1.0",
-  "description": "",
+  "description": "Build database free coralite websites",
   "scripts": {
     "html": "coralite -t ./tests/fixtures/templates -p ./tests/fixtures/pages -o ./dist",
     "test-e2e": "playwright test",
@@ -10,7 +10,21 @@
     "server": "sirv dist --dev --port 3000"
   },
   "keywords": [],
-  "author": "",
+  "homepage": "https://coralite.io",
+  "author": {
+    "name": "Thomas David",
+    "url": "https://thomasjackdavid.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://codeberg.org/mightysmile/coralite-plugin-aggregation.git"
+  },
+  "bugs": {
+    "url": "https://codeberg.org/mightysmile/coralite-plugin-aggregation/issues"
+  },
+  "imports": {
+    "#types": "./types/index.js"
+  },
   "exports": {
     ".": {
       "default": "./src/index.js",
