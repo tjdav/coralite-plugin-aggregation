@@ -9,23 +9,20 @@
     id: 'coralite-posts',
     values: {
       posts (values) {
-        return aggregation({
+        const pages = values.path ? parseInt(values.path) : 10
+        const options = {
           path: values.path,
           template: 'coralite-post',
-          pages: 10,
-          filter (meta) {
+          pages
+        }
+
+        if (values.filter) {
+          options.filter = function (meta) {
             return (meta.name === 'country' && (meta.content === 'au' || meta.content === 'mx'))
-          },
-          sortBy: 'published_time',
-          tokens: {
-            aliases: {
-              datetime: ['published_time']
-            },
-            values: {
-              image: 'default.png'
-            }
           }
-        })
+        }
+
+        return aggregation(options)
       }
     }
   })
