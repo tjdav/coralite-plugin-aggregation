@@ -9,16 +9,22 @@
     id: 'coralite-posts',
     values: {
       posts (values) {
-        const pages = values.path ? parseInt(values.path) : 10
+        const limit = values.limit ? parseInt(values.limit) : 10
         const options = {
-          path: values.path,
+          path: values.path.split(','),
           template: 'coralite-post',
-          pages
+          limit
         }
 
         if (values.filter) {
           options.filter = function (meta) {
             return (meta.name === 'country' && (meta.content === 'au' || meta.content === 'mx'))
+          }
+        }
+
+        if (values.pagination) {
+          options.pagination = {
+            template: 'coralite-pagination'
           }
         }
 
