@@ -178,49 +178,6 @@ export default createPlugin({
         }
       }
 
-      const meta = parseHTMLMeta(page.content)
-      const pageValues = Object.assign({
-        $pathname: page.path.pathname,
-        $filename: page.path.filename,
-        $dirname: page.path.dirname
-      }, values)
-      let prefix = '$'
-
-      // Process metadata and populate token values for rendering
-      for (const key in meta) {
-        if (Object.prototype.hasOwnProperty.call(meta, key)) {
-          const data = meta[key]
-          const content = []
-
-          if (Array.isArray(data)) {
-            let prefixName
-            // Handle multiple metadata items as list
-            for (let i = 0; i < data.length; i++) {
-              const item = data[i]
-              let name = prefix + item.name
-              let suffix = ''
-              prefixName = name
-
-              suffix = '_' + i
-
-              if (i === 0) {
-                pageValues[name] = item.content
-              }
-
-              pageValues[name + suffix] = item.content
-
-              content.push(item.content)
-            }
-
-            if (prefixName) {
-              pageValues[prefixName + '_list'] = content
-            }
-          } else {
-            pageValues[prefix + key] = data
-          }
-        }
-      }
-
       // Render component with current values and add to results
       const component = await this.createComponent({
         id: templateId,
