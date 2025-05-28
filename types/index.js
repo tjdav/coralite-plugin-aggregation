@@ -1,4 +1,8 @@
 /**
+ * @import {CoraliteToken, CoraliteTokenOptions, CoraliteDocument } from 'coralite/types'
+ */
+
+/**
  * Configuration for templates used to render aggregated results.
  * @typedef {Object} CoraliteAggregateTemplate - Templates used to display the result
  * @property {string} item - Unique identifier for the component used for each document
@@ -20,9 +24,10 @@
 /**
  * Configuration object for content aggregation processes.
  * @typedef {Object} CoraliteAggregate – Configuration object for the aggregation process
- * @property {string} path - The path to aggregate, relative to pages directory
+ * @property {string[]} path - The path to aggregate, relative to pages directory
  * @property {CoraliteAggregateTemplate | string} template - Templates used to display the result
  * @property {Object} [pagination]
+ * @property {string} pagination.id - Aggregation unique id
  * @property {string} pagination.token - The token name that was used by the aggregation function
  * @property {string} pagination.template - Pagination template ID
  * @property {string} pagination.path - Pagination page infix (e.g. 'page' will result in 'page/1')
