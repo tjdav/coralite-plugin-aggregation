@@ -1,17 +1,16 @@
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { Parser } from 'htmlparser2'
-import render from 'dom-serializer'
 import {
   getHtmlFiles,
   createElement,
   createTextNode,
-  parseHTMLMeta,
-  createPlugin
+  createPlugin,
 } from 'coralite/utils'
 
 /**
- * @import {Aggregation, CoraliteAggregate} from '#types'
+ * @import {CoraliteAnyNode, CoraliteCollectionItem, CoraliteContentNode, CoraliteDocumentRoot} from 'coralite/types'
+ * @import {CoraliteAggregate} from '#types'
  */
 
 export default createPlugin({
@@ -21,7 +20,7 @@ export default createPlugin({
    *
    * @param {CoraliteAggregate} options - Configuration object defining the aggregation behavior
    *
-   * @returns {Promise<Aggregation>} Array of processed content nodes from aggregated documents
+   * @returns {Promise<CoraliteAnyNode[]>} Array of processed content nodes from aggregated documents
    * @throws {Error} If pages directory path is undefined or aggregate path doesn't exist
    *
    */

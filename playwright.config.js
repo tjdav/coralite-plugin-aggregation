@@ -39,13 +39,6 @@ export default defineConfig({
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] }
     }
-  ],
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm run html & pnpm run server',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000
-  }
+  ]
 })
 
