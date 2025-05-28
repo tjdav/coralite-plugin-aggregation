@@ -78,8 +78,8 @@ export default createPlugin({
     // Sort results based on custom sort function
     if (typeof options.sort === 'function') {
       pages.sort((a, b) => {
-        const metaA = parseHTMLMeta(a.content)
-        const metaB = parseHTMLMeta(b.content)
+        const metaA = a.result.meta
+        const metaB = b.result.meta
 
         return options.sort(metaA, metaB)
       })
@@ -90,7 +90,7 @@ export default createPlugin({
 
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i]
-        const meta = parseHTMLMeta(page.content)
+        const meta = page.result.meta
         let keepItem = false
 
         // Process metadata and populate token values for rendering
@@ -120,7 +120,6 @@ export default createPlugin({
         if (keepItem) {
           filteredPages.push(page)
         }
-
       }
 
       pages = filteredPages
