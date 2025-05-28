@@ -25,15 +25,7 @@ export default createPlugin({
    * @throws {Error} If pages directory path is undefined or aggregate path doesn't exist
    *
    */
-  async method (options, { values, document, module, path }) {
-    let optionPath = options.path
-    const dirname = join(path.pages, optionPath)
-
-    if (!existsSync(dirname)) {
-      /** @TODO Refer to documentation */
-      throw new Error('Aggregate path does not exist: "' + dirname + '"')
-    }
-
+  async method (options, context) {
     let templateId
 
     // Determine template component ID from configuration
@@ -48,26 +40,39 @@ export default createPlugin({
       throw new Error('Aggregate template was undefined')
     }
 
-    optionPath
+    /** @type {CoraliteCollectionItem[]} */
+    let pages = []
 
-    if (optionPath[0] !== '/') {
-      optionPath = '/' + optionPath
-    }
+    for (let i = 0; i < options.path.length; i++) {
+      let path = options.path[i];
+      const dirname = join(context.path.pages, path)
 
-    let pages = this.pages.getListByPath(optionPath)
-
-    if (!pages || !pages.length) {
-      // Retrieve HTML pages from specified path
-      const collection = await getHtmlFiles({
-        type: 'page',
-        path: dirname
-      })
-
-      if (!collection.list.length) {
-        throw new Error('Aggregation found no documents in "' + dirname + '"')
+      if (!existsSync(dirname)) {
+        /** @TODO Refer to documentation */
+        throw new Error('Aggregate path does not exist: "' + dirname + '"')
       }
 
-      pages = collection.list
+      if (path[0] !== '/') {
+        path = '/' + path
+      }
+
+      const cachePages = this.pages.getListByPath(path)
+
+      if (!cachePages || !cachePages.length) {
+        // Retrieve HTML pages from specified path
+        const collection = await getHtmlFiles({
+          type: 'page',
+          path: dirname
+        })
+
+        if (!collection.list.length) {
+          throw new Error('Aggregation found no documents in "' + dirname + '"')
+        }
+
+        pages = pages.concat(collection.list)
+      } else {
+        pages = pages.concat(cachePages)
+      }
     }
 
     let result = []
