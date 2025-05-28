@@ -78,7 +78,7 @@ export default createPlugin({
     let result = []
     let startIndex = 0
     let endIndex = pages.length
-    let paginationOffset = values.paginationOffset
+    let paginationOffset = context.values.pagination_offset
 
     // Sort results based on custom sort function
     if (typeof options.sort === 'function') {
@@ -168,7 +168,7 @@ export default createPlugin({
     for (let i = startIndex; i < endIndex; i++) {
       let page = pages[i]
 
-      if (page.path.filename === document.path.filename) {
+      if (page.path.filename === context.document.path.filename) {
         // skip to next page
         page = pages[++i]
 
