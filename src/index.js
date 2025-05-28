@@ -181,8 +181,9 @@ export default createPlugin({
       // Render component with current values and add to results
       const component = await this.createComponent({
         id: templateId,
-        values: pageValues,
-        document
+        values: { ...context.values, ...page.result.values },
+        document: context.document,
+        contextId: context.id
       })
 
       if (typeof component === 'object') {
