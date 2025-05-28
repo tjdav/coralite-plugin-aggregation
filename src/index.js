@@ -194,12 +194,14 @@ export default createPlugin({
 
     if (options.pagination) {
       const pagination = options.pagination
+      const paginationInfix = pagination.path || 'page'
+      let processed = context.values.pagination_processed
 
-      if (!document.path.dirname.endsWith(pagination.path)) {
-        const path = document.path
-        const paginationTotal = pages.length.toString()
-        const paginationLength = Math.floor((pages.length - 1) / endIndex)
-        const nameSplit = document.path.filename.split('.')
+      if (!processed) {
+        const path = context.document.path
+        const paginationTotal = pages.length
+        const paginationLength = Math.floor(pages.length / endIndex)
+        const nameSplit = context.document.path.filename.split('.')
         const length = nameSplit.length - 1
         let name = ''
 
@@ -211,32 +213,36 @@ export default createPlugin({
           name = ''
         }
 
-        const dirname = join(document.path.dirname, name, pagination.path)
-        const page = this.pages.getItem(document.path.pathname)
+        const dirname = join(context.document.path.dirname, name, paginationInfix)
+        const indexPage = this.pages.getItem(context.document.path.pathname)
 
-        values = Object.assign(values, {
-          paginationOffset: endIndex.toString(),
-          paginationIndex: path.pathname,
-          paginationDirname: dirname,
-          paginationPathname: path.pathname,
-          paginationTotal: paginationTotal,
-          paginationCurrent: path.filename
-        })
+        context.values = { 
+          ...context.values,
+          pagination_processed: 'true',
+          pagination_offset: endIndex.toString(),
+          pagination_index: path.pathname,
+          pagination_dirname: dirname,
+          pagination_pathname: path.pathname,
+          pagination_total: paginationTotal.toString(),
+          pagination_current: path.filename
+        }
 
-        const id = options.pagination.id
-        for (let i = 0; i < paginationLength; i++) {
-          const filename = i + 2 + '.html'
+        for (let i = endIndex; i < paginationLength; i++) {
+          const filename = i + 1 + '.html'
           const pathname = join(dirname, filename)
-          const index = i + 1
-          const root = parsePagination(page.content, [
-            [id + '_pagination_offset', (endIndex * index).toString()],
-            [id + '_pagination_index', path.pathname],
-            [id + '_pagination_dirname', dirname],
-            [id + '_pagination_pathname', pathname],
-            [id + '_pagination_total', paginationTotal],
-            [id + '_pagination_current', index.toString()]
-          ])
-          const content = render(root)
+          // const root = parsePagination(page.content)
+          // const content = this._render(root)
+          // const index = context.instanceId.lastIndexOf(templateId)
+          const contextId = pathname + context.id.substring(context.document.path.pathname.length)
+          this.values[contextId] = { 
+            pagination_processed: 'true',
+            pagination_offset: (endIndex * i).toString(),
+            pagination_index: path.pathname,
+            pagination_dirname: dirname,
+            pagination_pathname: pathname,
+            pagination_total: paginationTotal.toString(),
+            pagination_current: i.toString(),
+          }
 
           this.addRenderQueue({
             path: {
@@ -244,21 +250,28 @@ export default createPlugin({
               pathname,
               filename
             },
-            content
+            content: indexPage.content
           })
         }
       }
 
-      if (pagination.template) {
-        const component = await this.createComponent({
-          id: pagination.template,
-          values,
-          document
-        })
+      const contextId = context.id
+      let values = this.values[contextId]
 
-        if (typeof component === 'object') {
-          result = result.concat(component.children)
-        }
+      if (!values || !processed) {
+        values = context.values
+        this.values[contextId] = values
+      }
+
+      const component = await this.createComponent({
+        id: pagination.template || 'coralite-pagination',
+        values,
+        document: context.document,
+        contextId
+      })
+
+      if (typeof component === 'object') {
+        result = result.concat(component.children)
       }
     }
 
