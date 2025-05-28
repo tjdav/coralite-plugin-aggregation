@@ -1,0 +1,65 @@
+<template id="coralite-pagination">
+   <ul class="pagination">
+    {{pagination}}
+  </ul>
+</template>
+
+<script type="module">
+  import { defineComponent, document } from 'coralite'
+
+  export default defineComponent({
+    values: {
+      pagination (values) {
+        const length = values.pagination_total
+        const limit = parseInt(values.limit)
+
+        if (length < limit) {
+          return ''
+        }
+        
+        let attributes = 'class="page-link"'
+        let previousItem = '<li class="page-item"><a href="#" class="page-link">Previous</a></li>'
+        let items = ''
+        let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
+
+        if (values.pagination_index === document.path.pathname) {
+          attributes = 'class="page-link active" aria-current="page"'
+          nextItem = `<li class="page-item"><a class="page-link" href="/${values.pagination_dirname + '/2.html'}">Next</a></li>`
+          items = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
+        }
+
+        items += `<li class="page-item"><a ${attributes} href="/${values.pagination_index}">1</a></li>`
+        
+        let currentIndex
+        for (let i = 1; i < length; i++) {
+          const index = i + 1
+          const pathname = values.pagination_dirname + '/' + index + '.html'
+          let attributes = 'class="page-link"'
+
+          if (values.pagination_pathname === pathname) {
+            let previous = values.pagination_index
+
+            currentIndex = index
+            attributes = 'class="page-link active" aria-current="page"'
+
+            if (index > 2) {
+              previous = values.pagination_dirname + '/' + i + '.html'
+            }
+
+            items = `<li class="page-item"><a href="/${previous}" class="page-link">Previous</a></li>${items}`
+          }
+
+          items += `<li class="page-item"><a ${attributes} href="/${pathname}">${index}</a></li>`
+        }
+
+        if (currentIndex < length) {
+            nextItem = `<li class="page-item"><a class="page-link" href="/${values.pagination_dirname + '/' + (currentIndex + 1) + '.html'}">Next</a></li>`
+          }
+
+        items += nextItem
+
+        return items
+      }
+    }
+  })
+</script>

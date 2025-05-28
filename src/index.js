@@ -276,7 +276,8 @@ export default createPlugin({
     }
 
     return result
-  }
+  },
+  templates: ['./src/templates/coralite-pagination.html']
 })
 
 /**
