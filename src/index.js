@@ -278,7 +278,7 @@ export default createPlugin({
 
     return result
   },
-  templates: ['./src/templates/coralite-pagination.html']
+  templates: [join(import.meta.dirname, 'templates/coralite-pagination.html')]
 })
 
 /**
@@ -331,19 +331,7 @@ export function parsePagination (string, meta) {
       const parent = stack[stack.length - 1]
 
       if (parent.type === 'tag' && parent.name === 'head') {
-        for (let i = 0; i < meta.length; i++) {
-          const [name, content] = meta[i]
-          const element = createElement({
-            name: 'meta',
-            attributes: {
-              name,
-              content
-            },
-            parent
-          })
-
-          parent.children.push(element)
-        }
+       
       }
       // remove current element from stack as we're done with its children
       stack.pop()
