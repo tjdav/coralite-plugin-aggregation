@@ -1,7 +1,5 @@
 <template id="coralite-pagination">
-   <ul class="pagination">
-    {{pagination}}
-  </ul>
+  {{pagination_list}}
 </template>
 
 <script type="module">
@@ -9,7 +7,7 @@
 
   export default defineComponent({
     values: {
-      pagination (values) {
+      pagination_list (values) {
         const length = values.pagination_total
         const limit = parseInt(values.limit)
 
