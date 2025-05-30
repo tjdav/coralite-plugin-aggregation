@@ -9,6 +9,7 @@
     "test-e2e-ui": "playwright test --ui",
     "server": "sirv dist --dev --port 3000"
   },
+  "type": "module",
   "keywords": [],
   "homepage": "https://coralite.io",
   "author": {
