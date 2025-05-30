@@ -8,10 +8,11 @@
   export default defineComponent({
     values: {
       pagination_list (values) {
-        const length = values.pagination_total
+        const length = parseInt(values.pagination_total)
         const limit = parseInt(values.limit)
 
-        if (length < limit) {
+        // skip pagination if not needed
+        if (length <= limit || !values.pagination_dirname) {
           return ''
         }
         
