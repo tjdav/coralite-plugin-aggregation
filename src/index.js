@@ -177,12 +177,12 @@ export default createPlugin({
         }
       }
 
-      // Render component with current values and add to results
+      // render component with current values and add to results
       const component = await this.createComponent({
         id: templateId,
         values: { ...context.values, ...page.result.values },
         document: context.document,
-        contextId: context.id
+        contextId: context.id + i + templateId
       })
 
       if (typeof component === 'object') {
@@ -262,11 +262,13 @@ export default createPlugin({
         this.values[contextId] = values
       }
 
+      const templateId = pagination.template || 'coralite-pagination'
+
       const component = await this.createComponent({
-        id: pagination.template || 'coralite-pagination',
+        id: templateId,
         values,
         document: context.document,
-        contextId
+        contextId: contextId + templateId
       })
 
       if (typeof component === 'object') {
