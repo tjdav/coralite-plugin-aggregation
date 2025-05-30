@@ -94,19 +94,19 @@ export default createPlugin({
 
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i]
-        const meta = page.result.meta
+        const metadata = page.result.values
         let keepItem = false
 
         // Process metadata and populate token values for rendering
-        for (const key in meta) {
-          if (Object.prototype.hasOwnProperty.call(meta, key)) {
-            const data = meta[key]
+        for (const key in metadata) {
+          if (Object.prototype.hasOwnProperty.call(metadata, key)) {
+            const data = metadata[key]
 
             if (Array.isArray(data)) {
               for (let i = 0; i < data.length; i++) {
 
                 if (!keepItem) {
-                  keepItem = options.filter(data[i])
+                  keepItem = options.filter({ name: key, content: data[i] })
                 }
               }
             } else {
