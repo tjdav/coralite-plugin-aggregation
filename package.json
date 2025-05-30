@@ -38,6 +38,7 @@
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@stylistic/eslint-plugin-plus": "^4.2.0",
+    "coralite": "^0.10.0",
     "sirv-cli": "^3.0.1"
   },
   "dependencies": {
@@ -45,6 +46,6 @@
     "htmlparser2": "^10.0.0"
   },
   "peerDependencies": {
-    "coralite": "^0.9.0"
+    "coralite": "^0.10.0"
   }
 }

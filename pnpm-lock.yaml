@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      coralite:
-        specifier: ^0.9.0
-        version: 0.9.0
       dom-serializer:
         specifier: ^2.0.0
         version: 2.0.0
@@ -27,6 +24,9 @@ importers:
       '@stylistic/eslint-plugin-plus':
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0)
+      coralite:
+        specifier: ^0.10.0
+        version: 0.10.0
       sirv-cli:
         specifier: ^3.0.1
         version: 3.0.1
@@ -168,8 +168,8 @@ packages:
     resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
     engines: {node: '>=4'}
 
-  coralite@0.9.0:
-    resolution: {integrity: sha512-JyIxuIPYODTLcT4nC94hkmK7wk61XgXb1sGTSt2nkL6EiXPr5beWGM6+ZrfyWdDMsEAlHyIRg+NBN4e2BFAYYQ==}
+  coralite@0.10.0:
+    resolution: {integrity: sha512-4X+PF7ZJcuX9MaS4zef58Hdy8ChkMEJjys/079fpgHFOXwLgfSFOp+w8DFnjWvNxpr1lS4KJd9kAk1XK/8mTRQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -612,7 +612,7 @@ snapshots:
 
   console-clear@1.1.1: {}
 
-  coralite@0.9.0:
+  coralite@0.10.0:
     dependencies:
       commander: 13.1.0
       dom-serializer: 2.0.0
