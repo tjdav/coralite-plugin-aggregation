@@ -17,10 +17,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://codeberg.org/mightysmile/coralite-plugin-aggregation.git"
+    "url": "https://codeberg.org/tjdavid/coralite-plugin-aggregation.git"
   },
   "bugs": {
-    "url": "https://codeberg.org/mightysmile/coralite-plugin-aggregation/issues"
+    "url": "https://codeberg.org/tjdavid/coralite-plugin-aggregation/issues"
   },
   "imports": {
     "#types": "./types/index.js"
