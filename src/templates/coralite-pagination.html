@@ -1,12 +1,12 @@
 <template id="coralite-pagination">
-  {{pagination_list}}
+  {{ pagination_list }}
 </template>
 
 <script type="module">
   import { defineComponent, document } from 'coralite'
 
   export default defineComponent({
-    values: {
+    tokens: {
       pagination_list (values) {
         const length = parseInt(values.pagination_total)
         const limit = parseInt(values.limit)
