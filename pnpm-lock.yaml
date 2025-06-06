@@ -25,8 +25,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0)
       coralite:
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.11.1
+        version: 0.11.1
       sirv-cli:
         specifier: ^3.0.1
         version: 3.0.1
@@ -168,9 +168,9 @@ packages:
     resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
     engines: {node: '>=4'}
 
-  coralite@0.10.0:
-    resolution: {integrity: sha512-4X+PF7ZJcuX9MaS4zef58Hdy8ChkMEJjys/079fpgHFOXwLgfSFOp+w8DFnjWvNxpr1lS4KJd9kAk1XK/8mTRQ==}
-    engines: {node: '>=18'}
+  coralite@0.11.1:
+    resolution: {integrity: sha512-Nw1d7TYeSqTXJ7Z1/Ndq7dV+vEwex91NVWoPDVrIgr2qJFS2R9nVIsXH2YmWHwsjwSqX50e3PprCButQfR7qhQ==}
+    engines: {node: '>=18.19.0'}
     hasBin: true
 
   cross-spawn@7.0.6:
@@ -612,7 +612,7 @@ snapshots:
 
   console-clear@1.1.1: {}
 
-  coralite@0.10.0:
+  coralite@0.11.1:
     dependencies:
       commander: 13.1.0
       dom-serializer: 2.0.0
