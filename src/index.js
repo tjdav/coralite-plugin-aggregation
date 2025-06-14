@@ -193,12 +193,11 @@ export default createPlugin({
     if (options.pagination) {
       const pagination = options.pagination
       const paginationInfix = pagination.path || 'page'
+      const paginationLength = Math.floor(pages.length / limit)
       let processed = context.values.pagination_processed
 
-      if (!processed) {
+      if (!processed && paginationLength) {
         const path = context.document.path
-        const paginationTotal = pages.length
-        const paginationLength = Math.floor(pages.length / endIndex)
         const nameSplit = context.document.path.filename.split('.')
         const length = nameSplit.length - 1
         let name = ''
@@ -221,12 +220,12 @@ export default createPlugin({
           pagination_index: path.pathname,
           pagination_dirname: dirname,
           pagination_pathname: path.pathname,
-          pagination_total: paginationTotal.toString(),
+          pagination_length: paginationLength.toString(),
           pagination_current: path.filename
         }
 
-        for (let i = endIndex; i < paginationLength; i++) {
-          const filename = i + 1 + '.html'
+        for (let i = 0; i < paginationLength; i++) {
+          const filename = i + 2 + '.html'
           const pathname = join(dirname, filename)
           // const root = parsePagination(page.content)
           // const content = this._render(root)
@@ -234,11 +233,11 @@ export default createPlugin({
           const contextId = pathname + context.id.substring(context.document.path.pathname.length)
           this.values[contextId] = { 
             pagination_processed: 'true',
-            pagination_offset: (endIndex * i).toString(),
+            pagination_offset: (endIndex * (i + 1)).toString(),
             pagination_index: path.pathname,
             pagination_dirname: dirname,
             pagination_pathname: pathname,
-            pagination_total: paginationTotal.toString(),
+            pagination_length: paginationLength.toString(),
             pagination_current: i.toString(),
           }
 
