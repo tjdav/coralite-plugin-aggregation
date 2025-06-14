@@ -8,11 +8,10 @@
   export default defineComponent({
     tokens: {
       pagination_list (values) {
-        const length = parseInt(values.pagination_total)
-        const limit = parseInt(values.limit)
+        const length = parseInt(values.pagination_length)
 
         // skip pagination if not needed
-        if (length <= limit || !values.pagination_dirname) {
+        if (!length) {
           return ''
         }
 
