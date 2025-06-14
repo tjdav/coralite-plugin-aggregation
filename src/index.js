@@ -148,19 +148,18 @@ export default createPlugin({
     }
 
     // Apply page limit
+    let limit
     if (options.limit) {
-      if (!Array.isArray(options.limit)) {
-        let limit = options.limit
+      limit = options.limit
 
-        if (typeof limit === 'string') {
-          limit = parseInt(limit)
-        }
+      if (typeof limit === 'string') {
+        limit = parseInt(limit)
+      }
 
-        limit += startIndex
+      const limitOffset = limit + startIndex
 
-        if (limit < endIndex) {
-          endIndex = limit
-        }
+      if (limitOffset < endIndex) {
+        endIndex = limitOffset
       }
     }
 
