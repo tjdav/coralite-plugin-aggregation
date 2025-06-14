@@ -15,46 +15,48 @@
           return ''
         }
 
+        const currentPathname = values.pagination_pathname[0] === '/' ? values.pagination_pathname : '/' + values.pagination_pathname
         const path = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
         const pathIndex = values.pagination_index[0] === '/' ? values.pagination_index : '/' + values.pagination_index
         
         let attributes = 'class="page-link"'
         let items = ''
         let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
-
+        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
+        
         // highlight current page if it matches the document path
         if (values.pagination_index === document.path.pathname) {
           attributes = 'class="page-link active" aria-current="page"'
           nextItem = `<li class="page-item"><a class="page-link" href="${path + '/2.html'}">Next</a></li>`
-          items = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
         }
 
         // add first page link
         items += `<li class="page-item"><a ${attributes} href="${pathIndex}">1</a></li>`
         
         let currentIndex
-        for (let i = 1; i < length; i++) {
-          const index = i + 1
-          const pathname = path + '/' + index + '.html'
+        let pageIndex = 2
+        for (let i = 0; i < length; i++) {
+          const pathname = path + '/' + pageIndex + '.html'
           let attributes = 'class="page-link"'
 
           // check if current link matches the active page
-          if (values.pagination_pathname === pathname) {
+          if (currentPathname === pathname) {
             let previous = pathIndex
 
-            currentIndex = index
+            currentIndex = pageIndex
             attributes = 'class="page-link active" aria-current="page"'
 
             // adjust "Previous" link to avoid invalid navigation on pages > 2
-            if (index > 2) {
+            if (pageIndex > 2) {
               previous = path + '/' + i + '.html'
             }
 
-            items = `<li class="page-item"><a href="${previous}" class="page-link">Previous</a></li>${items}`
+            prevItem = `<li class="page-item"><a href="${previous}" class="page-link">Previous</a></li>`
           }
 
           // add current page link
-          items += `<li class="page-item"><a ${attributes} href="${pathname}">${index}</a></li>`
+          items += `<li class="page-item"><a ${attributes} href="${pathname}">${pageIndex}</a></li>`
+          pageIndex++
         }
 
         // enable "Next" button if not on last page
@@ -62,7 +64,7 @@
           nextItem = `<li class="page-item"><a class="page-link" href="${path + '/' + (currentIndex + 1) + '.html'}">Next</a></li>`
         }
 
-        return '<ul class="pagination">' + items + nextItem + '</ul>'
+        return '<ul class="pagination">' + prevItem + items + nextItem + '</ul>'
       }
     }
   })
