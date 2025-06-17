@@ -27,10 +27,9 @@
  * @property {string[]} path - The path to aggregate, relative to pages directory
  * @property {CoraliteAggregateTemplate | string} template - Templates used to display the result
  * @property {Object} [pagination]
- * @property {string} pagination.id - Aggregation unique id
- * @property {string} pagination.token - The token name that was used by the aggregation function
- * @property {string} pagination.template - Pagination template ID
+ * @property {CoraliteAggregateTemplate | string} pagination.template - Pagination template ID
  * @property {string} pagination.path - Pagination page infix (e.g. 'page' will result in 'page/1')
+ * @property {number} pagination.visible - Maximum visible number of pages.
  * @property {CoraliteAggregateFilter} [filter] - Callback to filter out unwanted elements from the aggregated content.
  * @property {boolean} [recursive] - Whether to recursively search subdirectories
  * @property {CoraliteTokenOptions} [tokens] - Token configuration options
