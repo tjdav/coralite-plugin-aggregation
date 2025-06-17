@@ -7,6 +7,15 @@
 
   export default defineComponent({
     tokens: {
+      /**
+       * @param {Object} values
+       * @param {string} values.pagination_visible- Max number of visible pages items.
+       * @param {string} values.pagination_offset - Number of items to skip from the beginning (offset for pagination)
+       * @param {string} values.pagination_index - Base URL path for generating pagination links
+       * @param {string} values.pagination_dirname - Directory path component for routing context
+       * @param {string} values.pagination_length - Total number of items across all pages
+       * @param {string} values.pagination_current - Currently active page number or identifier
+       */
       pagination_list (values) {
         const length = parseInt(values.pagination_length)
 
@@ -15,53 +24,96 @@
           return ''
         }
 
-        const currentPathname = values.pagination_pathname[0] === '/' ? values.pagination_pathname : '/' + values.pagination_pathname
-        const path = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
-        const pathIndex = values.pagination_index[0] === '/' ? values.pagination_index : '/' + values.pagination_index
-        
+        const maxVisible = parseInt(values.pagination_visible)
+        const currentPage = parseInt(values.pagination_current)
+        const dirname = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
+        const indexPathname = values.pagination_index[0] === '/' ? values.pagination_index : '/' + values.pagination_index
+        const pages = []
+
+        if (maxVisible >= length) {
+          // show all pages when max visible is greater than or equal to total page count
+          for (let i = 1; i <= length; i++) {
+            pages.push(i)
+          }
+        } else {
+          // calculate start and end of visible range based on current page position
+          let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+          let end = Math.min(length, start + maxVisible - 1);
+
+          if (start > 1) {
+            pages.push(1)
+
+            if (start > 2) {
+              // add ellipsis to indicate omitted pages before visible range
+              pages.push('...')
+            }
+          }
+
+          for (let i = start; i <= end; i++) {
+            pages.push(i)
+          }
+
+          if (end < length) {
+            if (length - end > 1) {
+              // add ellipsis to indicate omitted pages after visible range
+              pages.push('...')
+            }
+
+            pages.push(length)
+          }
+        }
+
         let attributes = 'class="page-link"'
-        let items = ''
-        let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
-        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
-        
+ 
         // highlight current page if it matches the document path
         if (values.pagination_index === document.path.pathname) {
           attributes = 'class="page-link active" aria-current="page"'
-          nextItem = `<li class="page-item"><a class="page-link" href="${path + '/2.html'}">Next</a></li>`
         }
 
         // add first page link
-        items += `<li class="page-item"><a ${attributes} href="${pathIndex}">1</a></li>`
-        
-        let currentIndex
-        let pageIndex = 2
-        for (let i = 0; i < length; i++) {
-          const pathname = path + '/' + pageIndex + '.html'
-          let attributes = 'class="page-link"'
+        let items = `<li class="page-item"><a ${attributes} href="${indexPathname}">1</a></li>`
 
-          // check if current link matches the active page
-          if (currentPathname === pathname) {
-            let previous = pathIndex
+        // generate page items
+        for (let i = 1; i < pages.length; i++) {
+          const pageNum = pages[i]
+          
+          // check if current item an ellipsis
+          if (typeof pageNum === 'string') {
+            items += `<li class="page-item disabled"><span class="page-link">${pageNum}</span></li>`
+          } else {
+            // determine if this page number matches the current page
+            const isCurrent = currentPage === pageNum
 
-            currentIndex = pageIndex
-            attributes = 'class="page-link active" aria-current="page"'
+            let attributes = 'class="page-link"'
 
-            // adjust "Previous" link to avoid invalid navigation on pages > 2
-            if (pageIndex > 2) {
-              previous = path + '/' + i + '.html'
+            if (isCurrent) {
+              // add active state for current page
+              attributes = 'class="page-link active" aria-current="page"'
             }
 
-            prevItem = `<li class="page-item"><a href="${previous}" class="page-link">Previous</a></li>`
+            // construct link with dynamic page number and base directory path
+            items += `<li class="page-item"><a ${attributes} href="${dirname}/${pageNum}.html">${pageNum}</a></li>`
           }
-
-          // add current page link
-          items += `<li class="page-item"><a ${attributes} href="${pathname}">${pageIndex}</a></li>`
-          pageIndex++
         }
 
-        // enable "Next" button if not on last page
-        if (currentIndex < length) {
-          nextItem = `<li class="page-item"><a class="page-link" href="${path + '/' + (currentIndex + 1) + '.html'}">Next</a></li>`
+        let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
+        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
+
+
+        // initialize previous/next items as disabled links
+        if (currentPage > 1) {
+          let href = `${dirname}/${currentPage - 1}.html`
+
+          if (currentPage === 2) {
+            // set index path
+            href = indexPathname
+          }
+
+          prevItem = `<li class="page-item"><a class="page-link" href="${href}">Previous</a></li>`;
+        }
+
+        if (currentPage < length) {
+          nextItem = `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage + 1}.html">Next</a></li>`;
         }
 
         return '<ul class="pagination">' + prevItem + items + nextItem + '</ul>'
