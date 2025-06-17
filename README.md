@@ -6,6 +6,7 @@ The **Coralite Aggregation Plugin** is a powerful tool designed to help develope
 - [Installation](#installation)
 - [Example](#example)
 - [Type definition](#types)
+- [Custom pager](#custom-pager)
 
 ---
 
@@ -214,5 +215,92 @@ A representation of a token with name and value.
 |----------|--------|-----------------------------------------------------------------------------|
 | `name`   | `string`  | Token identifier (e.g., `'title'`, `'category'`).                            |
 | `content`| `string`  | Token value or content (e.g., `'Great Barrier Reef'`, `'tech'`).            |
+
+---
+
+## Custom Pager Template User Guide for Coralite Pagination Component  {#custom-pager}  
+
+This guide explains how to create a custom pagination template using the existing `coralite-pagination` component as a reference. The goal is to define a new pager layout below the default implementation, preserving compatibility with the core logic while enabling customization.
+
+---
+
+### Create a New Template Element
+Define a unique `<template>` element for your custom pager. Use an ID distinct from the default (`coralite-pagination`) to avoid conflicts:
+
+```html
+<template id="coralite-pagination-custom">
+  {{ pagination_list }}
+</template>
+```
+
+---
+
+### Implement Custom Logic in `<script type="module">`
+Replace or extend the `pagination_list` token function with your custom logic. The core structure remains compatible with Coralite’s API, but you can modify rendering rules (e.g., ellipsis behavior, link formatting).
+
+#### Example: Basic Custom Token Function
+```javascript
+<script type="module">
+  import { defineComponent } from 'coralite'
+
+  export default defineComponent({
+    tokens: {
+      /**
+       * @param {Object} values
+       * @param {string} values.pagination_visible - Max number of visible pages items.
+       * @param {string} values.pagination_offset - Number of items to skip from the beginning (offset for pagination)
+       * @param {string} values.pagination_index - Base URL path for generating pagination links
+       * @param {string} values.pagination_dirname - Directory path component for routing context
+       * @param {string} values.pagination_length - Total number of items across all pages
+       * @param {string} values.pagination_current - Currently active page number or identifier
+       */
+      pagination_list (values) {
+        const length = parseInt(values.pagination_length)
+        if (!length) return ''
+
+        // Custom logic: render a simplified pager with only previous/next and current page
+        const currentPage = parseInt(values.pagination_current)
+        const dirname = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
+
+        let html = '<ul class="pagination">'
+
+        // Previous link
+        if (currentPage > 1) {
+          html += `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage - 1}.html">Previous</a></li>`
+        } else {
+          html += '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
+        }
+
+        // Current page
+        html += `<li class="page-item active"><span class="page-link">${currentPage}</span></li>`
+
+        // Next link
+        if (currentPage < length) {
+          html += `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage + 1}.html">Next</a></li>`
+        } else {
+          html += '<li class="page-item disabled"><span class="page-link">Next</span></li>'
+        }
+
+        html += '</ul>'
+        return html
+      }
+    }
+  })
+</script>
+```
+
+---
+
+### Key Parameters
+The `pagination_list` token function receives these critical parameters from Coralite:
+
+| Parameter              | Description                                                                 |
+|-----------------------|-----------------------------------------------------------------------------|
+| `values.pagination_length` | Total number of items across all pages (used to determine page count).     |
+| `values.pagination_current` | Currently active page number.                                               |
+| `values.pagination_dirname` | Base directory path for routing context (e.g., `/blog`).                   |
+| `values.pagination_index`  | Base URL path for pagination links (e.g., `/blog/index.html`).             |
+
+> **Note:** Avoid hardcoding values like `length`, `currentPage`, or `dirname`. Use the parameters provided by Coralite to ensure compatibility.
 
 ---
