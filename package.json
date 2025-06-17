@@ -1,6 +1,6 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build database free coralite websites",
   "scripts": {
     "build": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
