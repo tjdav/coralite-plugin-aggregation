@@ -24,7 +24,9 @@
 
         if (values.pagination) {
           options.pagination = {
-            template: 'coralite-pagination'
+            template: 'coralite-pagination',
+            visible: values.paginationVisible,
+            path: values.paginationPath
           }
         }
 

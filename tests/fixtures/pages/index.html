@@ -15,13 +15,27 @@
   <section id="pagination">
     <h2>Paginated blog posts</h2>
     
-    <coralite-posts path="blog" pagination="true" limit="1"></coralite-posts>
+    <coralite-posts path="products" pagination="true" limit="1"></coralite-posts>
   </section>
+
+
+  <section id="pagination-visibility">
+    <h2>Paginated blog posts</h2>
+    
+    <coralite-posts
+      path="products"
+      pagination="true"
+      pagination-path="visible"
+      limit="2"
+    ></coralite-posts>
+  </section>
+  
+
   <hr>
 
-    <section id="limited">
+  <section id="limited">
     <h2>Limited blog posts</h2>
-    <coralite-posts path="blog" limit="1"></coralite-posts>
+    <!-- <coralite-posts path="blog" limit="1"></coralite-posts> -->
   </section>
 
 </body>
