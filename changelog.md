@@ -1,10 +1,42 @@
 # 🎁 Complete Release History
 
-## Initial Release: `v0.1.0`
+## Release: `v0.1.2`
+
+### Changes from `v0.1.0` to `v0.1.2`
+
+- cb7205a (HEAD -> main, tag: v0.1.2) chore: version bump - ([Thomas David](https://codeberg.org/tjdavid))
+- 042b730 (origin/main) fix: rename meta to values in sort function - ([Thomas David](https://codeberg.org/tjdavid))
+- b4dc56a refactor: remove unused parsePagination function - ([Thomas David](https://codeberg.org/tjdavid))
+- c61a727 (tag: v0.1.1) 0.1.1 - ([Thomas David](https://codeberg.org/tjdavid))
+- 3e0dcec feat: changelog script - ([Thomas David](https://codeberg.org/tjdavid))
+
+### Metadata
+```
+This version -------- v0.1.2
+Previous version ---- v0.1.0
+Total commits ------- 5
+```
+
+## Release: `v0.1.0`
+
+### Changes from `v0.1.1` to `v0.1.0`
+
+
+### Metadata
+```
+This version -------- v0.1.0
+Previous version ---- v0.1.1
+Total commits ------- 0
+```
+
+## Initial Release: `v0.1.1`
 
 ### Initial Commits
 
-- 2b0f1dc (HEAD -> main, tag: v0.1.0, origin/main) feat: Implement dynamic pagination with visible items and ellipsis - ([Thomas David](https://codeberg.org/tjdavid))
+- c61a727 (tag: v0.1.1) 0.1.1 - ([Thomas David](https://codeberg.org/tjdavid))
+- 3e0dcec feat: changelog script - ([Thomas David](https://codeberg.org/tjdavid))
+- edcda41 chore: add changelog - ([Thomas David](https://codeberg.org/tjdavid))
+- 2b0f1dc (tag: v0.1.0) feat: Implement dynamic pagination with visible items and ellipsis - ([Thomas David](https://codeberg.org/tjdavid))
 - 6b4d75f test: add fixtures to cover visibility feature - ([Thomas David](https://codeberg.org/tjdavid))
 - 70f5a4b add npm ignore list - ([Thomas David](https://codeberg.org/tjdavid))
 - 48cf1e0 docs: Add custom pager template user guide - ([Thomas David](https://codeberg.org/tjdavid))
@@ -19,7 +51,7 @@
 - 74ba4a0 fix: simplify page limit handling by removing array check and using offset correctly - ([Thomas David](https://codeberg.org/tjdavid))
 - 2cf82e6 refactor: Use tokens instead of values in component definitions - ([Thomas David](https://codeberg.org/tjdavid))
 - b5fde9d fix: fix previous navigation link generation in pagination - ([Thomas David](https://codeberg.org/tjdavid))
-    Correctly adjust the "Previous" link href based on current index to ensure proper
+    Correctly adjust the “Previous” link href based on current index to ensure proper
     navigation when on pages beyond the second one. The fix updates the logic to
     reference the correct page number for the previous item, resolving invalid
     navigation links in multi-page scenarios.
@@ -31,7 +63,7 @@
 - 4879d44 refactor: rename values to tokens in pagination_list - ([Thomas David](https://codeberg.org/tjdavid))
 - 3b06c3c chore: upgrade coralite to 0.11.1 - ([Thomas David](https://codeberg.org/tjdavid))
 - cfa07cb chore: update coralite to 0.10.0 - ([Thomas David](https://codeberg.org/tjdavid))
-- 320f665 chore: add "type": "module" to package.json - ([Thomas David](https://codeberg.org/tjdavid))
+- 320f665 chore: add “type”: “module” to package.json - ([Thomas David](https://codeberg.org/tjdavid))
 - 0ad0f60 chore: update repository and issues URLs in package.json - ([Thomas David](https://codeberg.org/tjdavid))
 - 679b3cf fix: use import.meta.dirname for template path - ([Thomas David](https://codeberg.org/tjdavid))
 - 093b1ea fix: ensure context scope for new components - ([Thomas David](https://codeberg.org/tjdavid))
@@ -77,12 +109,12 @@
 
 ### Metadata
 ```
-First version ------- v0.1.0
-Total commits ------- 47
+First version ------- v0.1.1
+Total commits ------- 50
 ```
 
 ## Summary
 ```
-Total releases ------ 1
-Total commits ------- 47
+Total releases ------ 3
+Total commits ------- 55
 ```
