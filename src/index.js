@@ -82,8 +82,8 @@ export default createPlugin({
     // Sort results based on custom sort function
     if (typeof options.sort === 'function') {
       pages.sort((a, b) => {
-        const metaA = a.result.meta
-        const metaB = b.result.meta
+        const metaA = a.result.values
+        const metaB = b.result.values
 
         return options.sort(metaA, metaB)
       })
