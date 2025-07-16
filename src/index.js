@@ -300,11 +300,16 @@ export default createPlugin({
   async onPageCreate ({ elements, values, data }) {
     // loop through all children of the root element to process metadata in <head> tags.
     for (let i = 0; i < elements.root.children.length; i++) {
-      const node = elements.root.children[i]
+      const rootNode = elements.root.children[i]
+      
+      // traverse html children to find the head element
+      if (rootNode.type === 'tag' && rootNode.name === 'html') {
+        for (let i = 0; i < rootNode.children.length; i++) {
+          const node = rootNode.children[i];
       
       // check if the current node is a <head> tag where metadata is typically found.
       if (node.type === 'tag' && node.name === 'head') {
-        // Iterate over the children of the head element to locate meta tags or component slots.
+            // iterate over the children of the head element to locate meta tags or component slots.
         for (let i = 0; i < node.children.length; i++) {
           const element = node.children[i]
           
@@ -345,8 +350,10 @@ export default createPlugin({
           }
         }
 
-        // Once the <head> tag is processed, return to exit the loop.
+            // once the <head> tag is processed, return to exit the loop.
         return
+          }
+        }  
       }
     }
   },
