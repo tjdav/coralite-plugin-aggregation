@@ -73,7 +73,7 @@ export default createPlugin({
     let endIndex = pages.length
     let paginationOffset = context.values.pagination_offset
 
-    // Sort results based on custom sort function
+    // sort results based on custom sort function
     if (typeof options.sort === 'function') {
       pages.sort((a, b) => {
         const metaA = a.result.values
@@ -91,7 +91,7 @@ export default createPlugin({
         const metadata = page.result.values
         let keepItem = false
 
-        // Process metadata and populate token values for rendering
+        // process metadata and populate token values for rendering
         for (const key in metadata) {
           if (Object.prototype.hasOwnProperty.call(metadata, key)) {
             const data = metadata[key]
@@ -104,7 +104,7 @@ export default createPlugin({
                 }
               }
             } else {
-              // Handle single metadata item
+              // handle single metadata item
               if (!keepItem) {
                 keepItem = options.filter({
                   name: key,
@@ -124,7 +124,7 @@ export default createPlugin({
       endIndex = pages.length
     }
 
-    // Apply page offset
+    // apply page offset
     if (Object.prototype.hasOwnProperty.call(options, 'offset') || paginationOffset != null) {
       let offset = paginationOffset || options.offset
 
