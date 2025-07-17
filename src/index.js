@@ -239,7 +239,7 @@ export default createPlugin({
             }
 
             // add pagination page to render queue
-            this.addRenderQueue({
+            await this.addRenderQueue({
               values: {
                 pagination_pager_dirname: path.dirname,
                 pagination_pager_index: pageIndex,
