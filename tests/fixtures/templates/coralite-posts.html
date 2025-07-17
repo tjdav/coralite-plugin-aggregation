@@ -3,10 +3,9 @@
 </template>
 
 <script type="module">
-  import { defineComponent, aggregation } from 'coralite'
+  import { defineComponent, aggregation } from 'coralite/plugins'
 
   export default defineComponent({
-    id: 'coralite-posts',
     tokens: {
       posts (values) {
         const limit = values.limit ? parseInt(values.limit) : 10
