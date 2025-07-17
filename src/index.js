@@ -275,18 +275,20 @@ export default createPlugin({
         values = context.values
         this.values[contextId] = values
       }
-
+      
       const templateId = pagination.template || 'coralite-pagination'
 
-      const component = await this.createComponent({
-        id: templateId,
-        values,
-        document: context.document,
-        contextId: contextId + templateId
-      })
+      if (typeof templateId === 'string') {
+        const component = await this.createComponent({
+          id: templateId,
+          values,
+          document: context.document,
+          contextId: contextId + templateId
+        })
 
-      if (typeof component === 'object') {
-        result = result.concat(component.children)
+        if (typeof component === 'object') {
+          result = result.concat(component.children)
+        }
       }
     }
 
@@ -301,52 +303,52 @@ export default createPlugin({
       if (rootNode.type === 'tag' && rootNode.name === 'html') {
         for (let i = 0; i < rootNode.children.length; i++) {
           const node = rootNode.children[i];
-      
-      // check if the current node is a <head> tag where metadata is typically found.
-      if (node.type === 'tag' && node.name === 'head') {
-            // iterate over the children of the head element to locate meta tags or component slots.
-        for (let i = 0; i < node.children.length; i++) {
-          const element = node.children[i]
           
-          // if the element is a tag named "meta" with both name and content attributes, store its metadata.
-          if (element.type === 'tag') {
-            if (element.name === 'meta'
-              && element.attribs.name
-              && element.attribs.content
-            ) {
-              values['$' + element.attribs.name] = element.attribs.content
-            } else if (element.slots) {
-              // process component slots by creating a component dynamically.
-              const component = await this.createComponent({
-                id: element.name,
-                values,
-                element,
-                document: data.result,
-                contextId: data.path.pathname + i + element.name
-              })
+          // check if the current node is a <head> tag where metadata is typically found.
+          if (node.type === 'tag' && node.name === 'head') {
+            // iterate over the children of the head element to locate meta tags or component slots.
+            for (let i = 0; i < node.children.length; i++) {
+              const element = node.children[i]
               
-              // if the created component returns valid children, iterate over them to extract meta information.
-              if (component) {
-                for (let i = 0; i < component.children.length; i++) {
-                  const element = component.children[i];
+              // if the element is a tag named "meta" with both name and content attributes, store its metadata.
+              if (element.type === 'tag') {
+                if (element.name === 'meta'
+                  && element.attribs.name
+                  && element.attribs.content
+                ) {
+                  values['$' + element.attribs.name] = element.attribs.content
+                } else if (element.slots) {
+                  // process component slots by creating a component dynamically.
+                  const component = await this.createComponent({
+                    id: element.name,
+                    values,
+                    element,
+                    document: data.result,
+                    contextId: data.path.pathname + i + element.name
+                  })
                   
-                  // for each child element in the component's returned HTML,
-                  // check if it is a meta tag and store its metadata with a '$' prefix.
-                  if (element.type === 'tag'
-                    && element.name === 'meta' 
-                    && element.attribs.name
-                    && element.attribs.content
-                  ) {
-                    values['$' + element.attribs.name] = element.attribs.content
+                  // if the created component returns valid children, iterate over them to extract meta information.
+                  if (component) {
+                    for (let i = 0; i < component.children.length; i++) {
+                      const element = component.children[i];
+                      
+                      // for each child element in the component's returned HTML,
+                      // check if it is a meta tag and store its metadata with a '$' prefix.
+                      if (element.type === 'tag'
+                        && element.name === 'meta' 
+                        && element.attribs.name
+                        && element.attribs.content
+                      ) {
+                        values['$' + element.attribs.name] = element.attribs.content
+                      }
+                    }
                   }
                 }
               }
             }
-          }
-        }
 
             // once the <head> tag is processed, return to exit the loop.
-        return
+            return
           }
         }  
       }
