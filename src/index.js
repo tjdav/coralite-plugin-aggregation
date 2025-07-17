@@ -186,6 +186,7 @@ export default createPlugin({
       }
     }
 
+    // process pagination
     if (options.pagination) {
       const pagination = options.pagination
       const paginationPath = context.values.pagination_path || pagination.path || 'page'
