@@ -1,12 +1,6 @@
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
-import { Parser } from 'htmlparser2'
-import {
-  getHtmlFiles,
-  createElement,
-  createTextNode,
-  createPlugin,
-} from 'coralite/utils'
+import { getHtmlFiles, createPlugin, } from 'coralite/utils'
 
 /**
  * @import {CoraliteAnyNode, CoraliteCollectionItem, CoraliteContentNode, CoraliteDocumentRoot} from 'coralite/types'
