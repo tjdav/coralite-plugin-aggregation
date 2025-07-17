@@ -58,7 +58,7 @@ Create a file like `coralite-posts.html` to define your aggregation logic and re
 </template>
 
 <script type="module">
-import { defineComponent, aggregation } from 'coralite'
+import { defineComponent, aggregation } from 'coralite/plugins'
 
 export default defineComponent({
   tokens: {
@@ -133,7 +133,7 @@ Define a `<template>` element for rendering individual items:
 </template>
 
 <script type="module">
-import { defineComponent } from 'coralite'
+import { defineComponent } from 'coralite/plugins'
 
 export default defineComponent({
   tokens: {
