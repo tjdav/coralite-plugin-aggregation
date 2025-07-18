@@ -294,7 +294,7 @@ export default createPlugin({
 
     return result
   },
-  async onPageCreate ({ elements, values, data }) {
+  async onPageSet ({ elements, values, data }) {
     // loop through all children of the root element to process metadata in <head> tags.
     for (let i = 0; i < elements.root.children.length; i++) {
       const rootNode = elements.root.children[i]
