@@ -1,7 +1,7 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.3.0",
-  "description": "Build database free coralite websites",
+  "version": "0.3.1",
+  "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
   "scripts": {
     "build": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
     "test-e2e": "playwright test",
@@ -10,7 +10,20 @@
     "server": "sirv dist --dev --port 3000"
   },
   "type": "module",
-  "keywords": [],
+  "keywords": [
+    "coralite",
+    "plugin",
+    "aggregation",
+    "static site generator",
+    "content management",
+    "content aggregation",
+    "filtering",
+    "sorting",
+    "pagination",
+    "metadata",
+    "database-free",
+    "static website"
+  ],
   "homepage": "https://coralite.io",
   "author": {
     "name": "Thomas David",
