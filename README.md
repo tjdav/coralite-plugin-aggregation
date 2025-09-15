@@ -72,8 +72,8 @@ export default defineComponent({
         pagination: {
           token: 'post_count',           // Page size control token.
           template: 'coralite-pagination', // Template for pagination controls.
-          path: 'page',                  // Infix for paginated URLs (e.g., `page/1`).
-          visible: 5                     // Max number of visible page links.
+          segment: 'page',                  // Segment for paginated URLs (e.g., `page/1`).
+          maxVisible: 5                     // Max number of visible page links.
         },
         filter(meta) {
           return meta.name === 'category' && meta.content === 'tech'
@@ -229,14 +229,14 @@ Define a unique `<template>` element for your custom pager. Use an ID distinct f
 
 ```html
 <template id="coralite-pagination-custom">
-  {{ pagination_list }}
+  {{ paginationList }}
 </template>
 ```
 
 ---
 
 ### Implement Custom Logic in `<script type="module">`
-Replace or extend the `pagination_list` token function with your custom logic. The core structure remains compatible with Coralite’s API, but you can modify rendering rules (e.g., ellipsis behavior, link formatting).
+Replace or extend the `paginationList` token function with your custom logic. The core structure remains compatible with Coralite’s API, but you can modify rendering rules (e.g., ellipsis behavior, link formatting).
 
 #### Example: Basic Custom Token Function
 ```javascript
@@ -245,22 +245,13 @@ Replace or extend the `pagination_list` token function with your custom logic. T
 
   export default defineComponent({
     tokens: {
-      /**
-       * @param {Object} values
-       * @param {string} values.pagination_visible - Max number of visible pages items.
-       * @param {string} values.pagination_offset - Number of items to skip from the beginning (offset for pagination)
-       * @param {string} values.pagination_index - Base URL path for generating pagination links
-       * @param {string} values.pagination_dirname - Directory path component for routing context
-       * @param {string} values.pagination_length - Total number of items across all pages
-       * @param {string} values.pagination_current - Currently active page number or identifier
-       */
-      pagination_list (values) {
-        const length = parseInt(values.pagination_length)
+      paginationList (values) {
+        const length = parseInt(values.paginationLength)
         if (!length) return ''
 
         // Custom logic: render a simplified pager with only previous/next and current page
-        const currentPage = parseInt(values.pagination_current)
-        const dirname = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
+        const currentPage = parseInt(values.paginationCurrent)
+        const dirname = values.pagination_dirname[0] === '/' ? values.paginationDirname : '/' + values.pagination_dirname
 
         let html = '<ul class="pagination">'
 

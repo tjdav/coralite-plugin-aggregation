@@ -3,7 +3,8 @@
 </template>
 
 <script type="module">
-  import { defineComponent, aggregation } from 'coralite/plugins'
+  import { defineComponent } from 'coralite'
+  import { aggregation } from 'coralite/plugins'
 
   export default defineComponent({
     tokens: {
@@ -24,8 +25,8 @@
         if (values.pagination) {
           options.pagination = {
             template: 'coralite-pagination',
-            visible: values.paginationVisible,
-            path: values.paginationPath
+            maxVisible: values.paginationMaxVisible,
+            segment: values.paginationSegment
           }
         }
 
