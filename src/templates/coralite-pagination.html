@@ -15,10 +15,17 @@
           return ''
         }
 
-        const maxVisible = parseInt(values.pagination_visible)
-        const currentPage = parseInt(values.pagination_current)
-        const dirname = values.pagination_dirname[0] === '/' ? values.pagination_dirname : '/' + values.pagination_dirname
-        const indexPathname = values.pagination_index[0] === '/' ? values.pagination_index : '/' + values.pagination_index
+        let dirname = values.paginationURLDirname
+
+        // remove trailing slash if present (but not for root directory)
+        if (dirname === '/' || dirname.endsWith('/')) {
+          dirname = dirname.slice(0, -1);
+        }
+
+        const maxVisible = parseInt(values.paginationVisible)
+        const currentPage = parseInt(values.paginationCurrent)
+        const indexURLPathname = values.paginationIndexURLPathname
+        const segment = values.paginationSegment
         const pages = []
 
         if (maxVisible >= length) {
@@ -54,15 +61,16 @@
           }
         }
 
+
         let attributes = 'class="page-link"'
  
         // highlight current page if it matches the document path
-        if (values.pagination_index === document.path.pathname) {
+        if (values.paginationFilePathname === values.$file_pathname) {
           attributes = 'class="page-link active" aria-current="page"'
         }
 
         // add first page link
-        let items = `<li class="page-item"><a ${attributes} href="${indexPathname}">1</a></li>`
+        let items = `<li class="page-item"><a ${attributes} href="${indexURLPathname}">1</a></li>`
 
         // generate page items
         for (let i = 1; i < pages.length; i++) {
@@ -82,8 +90,14 @@
               attributes = 'class="page-link active" aria-current="page"'
             }
 
+            let href = `${dirname}/${segment}/${pageNum}.html`
+
+            if (values.paginationIndexPathname !== values.$file_pathname) {
+              href = `${dirname}/${pageNum}.html`
+            } 
+
             // construct link with dynamic page number and base directory path
-            items += `<li class="page-item"><a ${attributes} href="${dirname}/${pageNum}.html">${pageNum}</a></li>`
+            items += `<li class="page-item"><a ${attributes} href="${href}">${pageNum}</a></li>`
           }
         }
 
@@ -97,14 +111,21 @@
 
           if (currentPage === 2) {
             // set index path
-            href = indexPathname
+            href = indexURLPathname
           }
 
           prevItem = `<li class="page-item"><a class="page-link" href="${href}">Previous</a></li>`;
         }
 
         if (currentPage < length) {
-          nextItem = `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage + 1}.html">Next</a></li>`;
+          const pageNum = currentPage + 1
+          let href = `${dirname}/${segment}/${pageNum}.html`
+
+          if (values.paginationIndexPathname !== values.$file_pathname) {
+            href = `${dirname}/${pageNum}.html`
+          } 
+
+          nextItem = `<li class="page-item"><a class="page-link" href="${href}">Next</a></li>`;
         }
 
         return '<ul class="pagination">' + prevItem + items + nextItem + '</ul>'
