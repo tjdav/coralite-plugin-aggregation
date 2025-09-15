@@ -208,7 +208,7 @@ export default createPlugin({
         let indexURLPathname = urlPathname
         let indexURLDirname = pathToFileURL(path.dirname(urlPathname)).pathname
         const indexPage = this.pages.getItem(documentPath.pathname)
-        const maxVisiblePages = (pagination.visible || paginationLength).toString()
+        const maxVisiblePages = (pagination.maxVisible || paginationLength).toString()
 
         // check if we are currently not on a index page
         if (context.values.paginationFileDirname == null) {
@@ -223,7 +223,7 @@ export default createPlugin({
             this.values[contextId] = {
               paginationIndexPathname: indexPathname,
               paginationSegment: paginationSegment,
-              paginationVisible: maxVisiblePages,
+              paginationMaxVisible: maxVisiblePages,
               paginationProcessed: 'true',
               paginationOffset: (endIndex * i).toString(),
               paginationFilePathname: pathname,
@@ -266,7 +266,7 @@ export default createPlugin({
           paginationIndexURLPathname: indexURLPathname,
           paginationIndexURLDirname: indexURLDirname,
           paginationSegment: paginationSegment,
-          paginationVisible: maxVisiblePages,
+          paginationMaxVisible: maxVisiblePages,
           paginationProcessed: 'true',
           paginationOffset: endIndex.toString(),
           paginationFilePathname: indexPathname,
