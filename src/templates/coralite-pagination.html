@@ -8,17 +8,8 @@
 
   export default defineComponent({
     tokens: {
-      /**
-       * @param {Object} values
-       * @param {string} values.pagination_visible- Max number of visible pages items.
-       * @param {string} values.pagination_offset - Number of items to skip from the beginning (offset for pagination)
-       * @param {string} values.pagination_index - Base URL path for generating pagination links
-       * @param {string} values.pagination_dirname - Directory path component for routing context
-       * @param {string} values.pagination_length - Total number of items across all pages
-       * @param {string} values.pagination_current - Currently active page number or identifier
-       */
-      pagination_list (values) {
-        const length = parseInt(values.pagination_length)
+      paginationList (values) {
+        const length = parseInt(values.paginationLength)
 
         // skip pagination if not needed
         if (!length) {
