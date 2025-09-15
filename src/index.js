@@ -1,9 +1,10 @@
-import { join } from 'node:path'
+import path from 'node:path'
 import { existsSync } from 'node:fs'
-import { getHtmlFiles, createPlugin, } from 'coralite/utils'
+import { getHtmlFiles, createPlugin, } from 'coralite'
+import { pathToFileURL } from 'node:url'
 
 /**
- * @import {CoraliteAnyNode, CoraliteCollectionItem, CoraliteContentNode, CoraliteDocumentRoot} from 'coralite/types'
+ * @import {CoraliteAnyNode, CoraliteCollectionItem} from 'coralite/types'
  * @import {CoraliteAggregate} from '#types'
  */
 
@@ -37,19 +38,15 @@ export default createPlugin({
     let pages = []
 
     for (let i = 0; i < options.path.length; i++) {
-      let path = options.path[i];
-      const dirname = join(context.path.pages, path)
+      const optionPath = options.path[i];
+      const dirname = path.join(context.path.pages, optionPath)
 
       if (!existsSync(dirname)) {
         /** @TODO Refer to documentation */
         throw new Error('Aggregate path does not exist: "' + dirname + '"')
       }
 
-      if (path[0] !== '/') {
-        path = '/' + path
-      }
-
-      const cachePages = this.pages.getListByPath(path)
+      const cachePages = this.pages.getListByPath(dirname)
 
       if (!cachePages || !cachePages.length) {
         // Retrieve HTML pages from specified path
@@ -71,7 +68,7 @@ export default createPlugin({
     let result = []
     let startIndex = 0
     let endIndex = pages.length
-    let paginationOffset = context.values.pagination_offset
+    let paginationOffset = context.values.paginationOffset
 
     // sort results based on custom sort function
     if (typeof options.sort === 'function') {
@@ -190,55 +187,59 @@ export default createPlugin({
     // process pagination
     if (options.pagination) {
       const pagination = options.pagination
-      const paginationPath = context.values.pagination_path || pagination.path || 'page'
+      const paginationSegment = context.values.paginationSegment || pagination.segment || 'page'
       const paginationLength = Math.floor(pageLength / limit)
-      let processed = context.values.pagination_processed
+      let processed = context.values.paginationProcessed
 
       if (!processed && paginationLength) {
-        const path = context.document.path
-        const nameSplit = context.document.path.filename.split('.')
-        const length = nameSplit.length - 1
-        let name = ''
-
-        for (let i = 0; i < length; i++) {
-          name += nameSplit[i]
-        }
+        const documentPath = context.document.path
+        
+        // remove file extension
+        let name = context.document.path.filename.replace(path.extname(context.document.path.filename), '')
 
         if (name === 'index') {
           name = ''
         }
 
         // @ts-ignore
-        let dirname = join(path.dirname, name, paginationPath)
-        let pageIndex = path.pathname
-        const indexPage = this.pages.getItem(path.pathname)
+        let dirname = path.join(documentPath.dirname, name, paginationSegment)
+        const indexPathname = documentPath.pathname
+        let urlPathname = pathToFileURL(path.join('/', path.relative(this.options.path.pages, indexPathname))).pathname
+        let indexURLPathname = urlPathname
+        let indexURLDirname = pathToFileURL(path.dirname(urlPathname)).pathname
+        const indexPage = this.pages.getItem(documentPath.pathname)
         const maxVisiblePages = (pagination.visible || paginationLength).toString()
 
-        // check if we are currently not on a pager page
-        if (context.values.pagination_pager_dirname == null) {
+        // check if we are currently not on a index page
+        if (context.values.paginationFileDirname == null) {
           for (let i = 1; i < paginationLength; i++) {
             const currentPageIndex = i + 1
             const filename = currentPageIndex + '.html'
-            const pathname = join(dirname, filename)
-            const contextId = pathname + context.id.substring(path.pathname.length)
-            
-            // store global values for pagination page
+            const pathname = path.join(dirname, filename)
+            const contextId = pathname + context.id.substring(documentPath.pathname.length)
+            const urlPathname = pathToFileURL(path.join('/', path.relative(this.options.path.pages, pathname))).pathname
+            const urlDirname = pathToFileURL(path.dirname(urlPathname)).pathname
+            // store context values for pagination page
             this.values[contextId] = {
-              pagination_path: paginationPath,
-              pagination_visible: maxVisiblePages,
-              pagination_processed: 'true',
-              pagination_offset: (endIndex * i).toString(),
-              pagination_index: path.pathname,
-              pagination_dirname: dirname,
-              pagination_length: paginationLength.toString(),
-              pagination_current: currentPageIndex.toString(),
+              paginationIndexPathname: indexPathname,
+              paginationSegment: paginationSegment,
+              paginationVisible: maxVisiblePages,
+              paginationProcessed: 'true',
+              paginationOffset: (endIndex * i).toString(),
+              paginationFilePathname: pathname,
+              paginationFileDirname: dirname,
+              paginationURLPathname: urlPathname,
+              paginationURLDirname: urlDirname,
+              paginationLength: paginationLength.toString(),
+              paginationCurrent: currentPageIndex,
             }
 
             // add pagination page to render queue
             await this.addRenderQueue({
               values: {
-                pagination_pager_dirname: path.dirname,
-                pagination_pager_index: pageIndex,
+                paginationIndexURLPathname: indexURLPathname,
+                paginationIndexURLDirname: indexURLDirname,
+                paginationFileDirname: documentPath.dirname,
               },
               path: {
                 dirname,
@@ -250,22 +251,30 @@ export default createPlugin({
           }
         } else {
           // @ts-ignore
-          dirname = join(context.values.pagination_pager_dirname, paginationPath)
-          // @ts-ignore
-          pageIndex = context.values.pagination_pager_index
+          dirname = path.dirname(documentPath.dirname)
+          
+          urlPathname = pathToFileURL(path.join('/', path.relative(this.options.path.pages, dirname), name + '.html')).pathname
+
+          indexURLPathname = urlPathname
+          indexURLDirname = pathToFileURL(path.dirname(urlPathname)).pathname
         }
 
         // store pagination values for current page
         context.values = { 
           ...context.values,
-          pagination_path: paginationPath,
-          pagination_visible: maxVisiblePages,
-          pagination_processed: 'true',
-          pagination_offset: endIndex.toString(),
-          pagination_index: pageIndex,
-          pagination_dirname: dirname,
-          pagination_length: paginationLength.toString(),
-          pagination_current: '1'
+          paginationIndexPathname: indexPathname,
+          paginationIndexURLPathname: indexURLPathname,
+          paginationIndexURLDirname: indexURLDirname,
+          paginationSegment: paginationSegment,
+          paginationVisible: maxVisiblePages,
+          paginationProcessed: 'true',
+          paginationOffset: endIndex.toString(),
+          paginationFilePathname: indexPathname,
+          paginationFileDirname: dirname,
+          paginationURLPathname: urlPathname,
+          paginationURLDirname: pathToFileURL(path.dirname(urlPathname)).pathname,
+          paginationLength: paginationLength.toString(),
+          paginationCurrent: '1'
         }
       }
 
@@ -356,5 +365,5 @@ export default createPlugin({
       }
     }
   },
-  templates: [join(import.meta.dirname, 'templates/coralite-pagination.html')]
+  templates: [path.join(import.meta.dirname, 'templates/coralite-pagination.html')]
 })
