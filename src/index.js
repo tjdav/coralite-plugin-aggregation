@@ -177,7 +177,8 @@ export default createPlugin({
         id: templateId,
         values: { ...context.values, ...page.result.values },
         document: context.document,
-        contextId: context.id + i + templateId
+        contextId: context.id + i + templateId,
+        index: i
       })
 
       if (typeof component === 'object') {
@@ -324,7 +325,8 @@ export default createPlugin({
                     values,
                     element,
                     document: data.result,
-                    contextId: data.path.pathname + i + element.name
+                    contextId: data.path.pathname + i + element.name,
+                    index: i
                   })
                   
                   // if the created component returns valid children, iterate over them to extract meta information.
