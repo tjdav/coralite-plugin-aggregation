@@ -41,10 +41,14 @@
   },
   "exports": {
     ".": {
-      "default": "./src/index.js",
-      "types": "./types/index.js"
+      "types": "./types/index.js",
+      "default": "./lib/index.js"
     }
   },
+  "files": [
+    "lib",
+    "types"
+  ],
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@10.15.1",
   "devDependencies": {
