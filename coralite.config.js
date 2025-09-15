@@ -1,4 +1,4 @@
-import aggregation from './src/index.js'
+import aggregation from './lib/index.js'
 
 export default {
   plugins: [aggregation]
