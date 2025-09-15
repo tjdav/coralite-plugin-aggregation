@@ -28,8 +28,8 @@
  * @property {CoraliteAggregateTemplate | string} template - Templates used to display the result
  * @property {Object} [pagination]
  * @property {CoraliteAggregateTemplate | string} pagination.template - Pagination template ID
- * @property {string} pagination.path - Pagination page infix (e.g. 'page' will result in 'page/1')
- * @property {number} pagination.visible - Maximum visible number of pages.
+ * @property {string} [pagination.segment='page'] - Pagination page segment (e.g. 'page' will result in 'page/1')
+ * @property {number} pagination.maxVisible - Maximum visible number of pages.
  * @property {CoraliteAggregateFilter} [filter] - Callback to filter out unwanted elements from the aggregated content.
  * @property {boolean} [recursive] - Whether to recursively search subdirectories
  * @property {CoraliteTokenOptions} [tokens] - Token configuration options
