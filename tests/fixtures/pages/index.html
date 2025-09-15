@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +8,25 @@
   <meta name="name" content="coralite">
   <meta name="description" content="look mum, no database!">
 </head>
+
 <body>
-  
+
   <h1>Build database free websites</h1>
   <hr>
 
   <section id="pagination">
     <h2>Paginated blog posts</h2>
-    
+
     <coralite-posts path="products" pagination="true" limit="1"></coralite-posts>
   </section>
 
 
   <section id="pagination-visibility">
     <h2>Paginated blog posts</h2>
-    
-    <coralite-posts
-      path="products"
-      pagination="true"
-      pagination-path="visible"
-      limit="2"
-    ></coralite-posts>
+
+    <coralite-posts path="products" pagination="true" pagination-segment="visible" limit="2"></coralite-posts>
   </section>
-  
+
 
   <hr>
 
@@ -39,4 +36,5 @@
   </section>
 
 </body>
+
 </html>
