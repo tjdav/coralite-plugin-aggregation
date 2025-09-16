@@ -36,9 +36,6 @@
   "bugs": {
     "url": "https://codeberg.org/tjdavid/coralite-plugin-aggregation/issues"
   },
-  "imports": {
-    "#types": "./types/index.js"
-  },
   "exports": {
     ".": {
       "types": "./types/index.js",
