@@ -1,6 +1,6 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
   "scripts": {
     "build": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
