@@ -58,8 +58,5 @@
   "dependencies": {
     "dom-serializer": "^2.0.0",
     "htmlparser2": "^10.0.0"
-  },
-  "peerDependencies": {
-    "coralite": "^0.18.2"
   }
 }
