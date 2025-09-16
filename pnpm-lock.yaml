@@ -25,11 +25,17 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0)
       coralite:
-        specifier: ^0.18.1
-        version: 0.18.1
+        specifier: ^0.18.2
+        version: 0.18.2
+      premove:
+        specifier: ^4.0.0
+        version: 4.0.0
       sirv-cli:
         specifier: ^3.0.1
         version: 3.0.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
 
 packages:
 
@@ -168,8 +174,8 @@ packages:
     resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
     engines: {node: '>=4'}
 
-  coralite@0.18.1:
-    resolution: {integrity: sha512-tuvYnZaxqhjWRu01PMj9LSuMOXlX5G5HgfSiwTiLFa6JOSzwuMO1v4C0I5Kfu+a4LgjjdTR9bCaXRNT3S0w5RA==}
+  coralite@0.18.2:
+    resolution: {integrity: sha512-/WsmfKUWE19+xa8qXFTZrWJqLumcScLqLKjomwG/Y52aWFPJpPqTafrkI031uCnXnZ4AmePoBgi8UyE6+afKMA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -417,6 +423,11 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
+  premove@4.0.0:
+    resolution: {integrity: sha512-zim/Hr4+FVdCIM7zL9b9Z0Wfd5Ya3mnKtiuDv7L5lzYzanSq6cOcVJ7EFcgK4I0pt28l8H0jX/x3nyog380XgQ==}
+    engines: {node: '>=6'}
+    hasBin: true
+
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -469,6 +480,11 @@ packages:
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
+
+  typescript@5.9.2:
+    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
@@ -612,7 +628,7 @@ snapshots:
 
   console-clear@1.1.1: {}
 
-  coralite@0.18.1:
+  coralite@0.18.2:
     dependencies:
       commander: 13.1.0
       dom-serializer: 2.0.0
@@ -857,6 +873,8 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
+  premove@4.0.0: {}
+
   punycode@2.3.1: {}
 
   resolve-from@4.0.0: {}
@@ -903,6 +921,8 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
+
+  typescript@5.9.2: {}
 
   uri-js@4.4.1:
     dependencies:
