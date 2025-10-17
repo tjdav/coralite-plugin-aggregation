@@ -53,8 +53,10 @@
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@stylistic/eslint-plugin-plus": "^4.2.0",
-    "coralite": "^0.18.2",
     "sirv-cli": "^3.0.1"
+  },
+  "peerDependencies": {
+    "coralite": "^0.18.*"
   },
   "dependencies": {
     "dom-serializer": "^2.0.0",
