@@ -21,7 +21,7 @@ The **Coralite Aggregation Plugin** is a powerful tool designed to help develope
 
 ## Coralite Aggregation Plugin Guide
 
-### Installation {#installation}  
+### Installation
 
 ```bash
 npm install coralite-plugin-aggregation
@@ -43,7 +43,7 @@ export default {
 
 ---
 
-### Example Implementation {#example} 
+### Example Implementation
 
 #### Entry Point: Displaying Aggregated Results
 Create a file like `coralite-posts.html` to define your aggregation logic and rendering template:
@@ -288,7 +288,7 @@ The pagination template receives these token values:
 | Property                      | Description                                                                 |
 |------------------------------|-----------------------------------------------------------------------------|
 | `paginationIndexPathname`   | The index path name for pagination (e.g., `/blog/index.html`).              |
-| `paginationSegment`         | The current segment of pagination (e.g., "page-2").                         |
+| `paginationSegment`         | The current segment of pagination (e.g., "page").                         |
 | `paginationMaxVisible`      | Maximum number of visible pages in the pagination UI.                       |
 | `paginationProcessed`       | Indicates whether the pagination has been processed (`true`/`false`).       |
 | `paginationOffset`          | String representation of the offset (used for page calculations).           |
