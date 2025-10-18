@@ -65,7 +65,7 @@
         let attributes = 'class="page-link"'
  
         // highlight current page if it matches the document path
-        if (values.paginationFilePathname === values.$file_pathname) {
+        if (values.paginationFilePathname === values.$filePathname) {
           attributes = 'class="page-link active" aria-current="page"'
         }
 
@@ -77,7 +77,7 @@
           const pageNum = pages[i]
           
           // check if current item an ellipsis
-          if (typeof pageNum === 'string') {
+          if (pageNum === '...') {
             items += `<li class="page-item disabled"><span class="page-link">${pageNum}</span></li>`
           } else {
             // determine if this page number matches the current page
@@ -92,7 +92,7 @@
 
             let href = `${dirname}/${segment}/${pageNum}.html`
 
-            if (values.paginationIndexPathname !== values.$file_pathname) {
+            if (values.paginationIndexPathname !== values.$filePathname) {
               href = `${dirname}/${pageNum}.html`
             } 
 
@@ -121,7 +121,7 @@
           const pageNum = currentPage + 1
           let href = `${dirname}/${segment}/${pageNum}.html`
 
-          if (values.paginationIndexPathname !== values.$file_pathname) {
+          if (values.paginationIndexPathname !== values.$filePathname) {
             href = `${dirname}/${pageNum}.html`
           } 
 
