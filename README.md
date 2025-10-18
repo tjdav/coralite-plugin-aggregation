@@ -282,16 +282,21 @@ Replace or extend the `paginationList` token function with your custom logic. Th
 
 ---
 
-### Key Parameters
-The `pagination_list` token function receives these critical parameters from Coralite:
+### Template tokens
+The pagination template receives these token values:
 
-| Parameter              | Description                                                                 |
-|-----------------------|-----------------------------------------------------------------------------|
-| `values.pagination_length` | Total number of items across all pages (used to determine page count).     |
-| `values.pagination_current` | Currently active page number.                                               |
-| `values.pagination_dirname` | Base directory path for routing context (e.g., `/blog`).                   |
-| `values.pagination_index`  | Base URL path for pagination links (e.g., `/blog/index.html`).             |
-
-> **Note:** Avoid hardcoding values like `length`, `currentPage`, or `dirname`. Use the parameters provided by Coralite to ensure compatibility.
+| Property                      | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| `paginationIndexPathname`   | The index path name for pagination (e.g., `/blog/index.html`).              |
+| `paginationSegment`         | The current segment of pagination (e.g., "page-2").                         |
+| `paginationMaxVisible`      | Maximum number of visible pages in the pagination UI.                       |
+| `paginationProcessed`       | Indicates whether the pagination has been processed (`true`/`false`).       |
+| `paginationOffset`          | String representation of the offset (used for page calculations).           |
+| `paginationFilePathname`    | The file path name for pagination context (e.g., `/blog/page-2.html`).      |
+| `paginationFileDirname`     | The directory name of the file for pagination context (e.g., `/blog`).      |
+| `paginationURLPathname`     | The URL path name used in pagination (e.g., `/blog/`).                      |
+| `paginationURLDirname`      | The URL directory name used in pagination (e.g., `/blog`).                  |
+| `paginationLength`          | Total length of the paginated data set (used to determine total page count).|
+| `paginationCurrent`         | Current page index (as a string, e.g., "2").                                |
 
 ---
