@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       coralite:
-        specifier: ^0.18.*
-        version: 0.18.6
+        specifier: ^0.18.7
+        version: 0.18.7
       dom-serializer:
         specifier: ^2.0.0
         version: 2.0.0
@@ -168,8 +168,8 @@ packages:
     resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
     engines: {node: '>=4'}
 
-  coralite@0.18.6:
-    resolution: {integrity: sha512-DLR1hwkU+dBXkUlEMnCg6ivS3H9PeEe/Efg7c8PnCubunlNl3HOMxQ2pRLGAeWtS1bvwq7FPfc2HoiPq0ijUlQ==}
+  coralite@0.18.7:
+    resolution: {integrity: sha512-uFrsIMEytSj7KQVmc6Av5utz/lNxRJIfde+7Kbmd6vEtMGbahfuUaG3vkTeHyKiR2C+APOSxQypD/2uxu+M8bw==}
     engines: {node: ^20.19.0 || >=22.19.0}
     hasBin: true
 
@@ -612,7 +612,7 @@ snapshots:
 
   console-clear@1.1.1: {}
 
-  coralite@0.18.6:
+  coralite@0.18.7:
     dependencies:
       commander: 13.1.0
       dom-serializer: 2.0.0

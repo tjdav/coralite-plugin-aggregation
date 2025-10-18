@@ -55,7 +55,7 @@
     "sirv-cli": "^3.0.1"
   },
   "peerDependencies": {
-    "coralite": "^0.18.*"
+    "coralite": "^0.18.7"
   },
   "dependencies": {
     "dom-serializer": "^2.0.0",
