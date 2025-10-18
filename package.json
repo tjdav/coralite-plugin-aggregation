@@ -2,13 +2,6 @@
   "name": "coralite-plugin-aggregation",
   "version": "0.5.2",
   "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
-  "scripts": {
-    "build": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
-    "test-e2e": "playwright test",
-    "test-e2e-report": "playwright show-report",
-    "test-e2e-ui": "playwright test --ui",
-    "server": "sirv dist --dev --port 3000"
-  },
   "type": "module",
   "keywords": [
     "coralite",
@@ -47,6 +40,13 @@
     "lib",
     "types"
   ],
+  "scripts": {
+    "build-test": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
+    "test-e2e": "playwright test",
+    "test-e2e-report": "playwright show-report",
+    "test-e2e-ui": "playwright test --ui",
+    "server": "sirv dist --dev --port 3000"
+  },
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@10.16.1",
   "devDependencies": {
