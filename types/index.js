@@ -37,3 +37,20 @@
  * @property {number} [limit] - Specifies the maximum number of results to retrieve.
  * @property {number} [offset] - Specifies the starting index for the results list.
  */
+
+/**
+ * @typedef {Object} PaginationMetadata
+ * @property {string} paginationIndexPathname - The index path name for pagination.
+ * @property {string} paginationSegment - The current segment of pagination.
+ * @property {number} paginationMaxVisible - Maximum number of visible pages in the pagination UI.
+ * @property {boolean} paginationProcessed - Indicates whether the pagination has been processed.
+ * @property {string} paginationOffset - String representation of the offset.
+ * @property {string} paginationFilePathname - The file path name for pagination context.
+ * @property {string} paginationFileDirname - The directory name of the file for pagination context.
+ * @property {string} paginationURLPathname - The URL path name used in pagination.
+ * @property {string} paginationURLDirname - The URL directory name used in pagination.
+ * @property {number} paginationLength - Total length of the paginated data set.
+ * @property {number} paginationCurrent - Current page index (as a string).
+ */
+
+export default {}
