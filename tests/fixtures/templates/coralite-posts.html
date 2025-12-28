@@ -11,6 +11,7 @@
       posts (values) {
         const limit = values.limit ? parseInt(values.limit) : 10
         const options = {
+          id: values.pagerId,
           path: values.path.split(','),
           template: 'coralite-post',
           limit
