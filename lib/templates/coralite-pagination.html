@@ -15,21 +15,16 @@
           return ''
         }
 
-        let dirname = values.paginationURLDirname
-
-        // remove trailing slash if present (but not for root directory)
-        if (dirname === '/' || dirname.endsWith('/')) {
-          dirname = dirname.slice(0, -1);
-        }
-
         const maxVisible = parseInt(values.paginationMaxVisible)
         const currentPage = parseInt(values.paginationCurrent)
         const indexURLPathname = values.paginationIndexURLPathname
         const segment = values.paginationSegment
+        const paginationFilePathname = values.paginationFilePathname
+        const paginationIndexURLPathname = values.paginationIndexURLPathname
         const pages = []
 
         if (maxVisible >= length) {
-          // show all pages when max visible is greater than or equal to total page count
+          // show all pages when maxVisible is greater than or equal to total page count
           for (let i = 1; i <= length; i++) {
             pages.push(i)
           }
@@ -61,71 +56,80 @@
           }
         }
 
-
-        let attributes = 'class="page-link"'
- 
-        // highlight current page if it matches the document path
-        if (values.paginationFilePathname === values.$filePathname) {
-          attributes = 'class="page-link active" aria-current="page"'
+        // Determine base URL directory and whether to add segment
+        // For index page: baseDir = /blog, needs segment = /blog/page
+        // For page 2: baseDir = /blog/page/2, no segment needed
+        const isIndexPage = values.paginationURLDirname === values.paginationIndexURLDirname
+        let baseDir = values.$urlDirname
+        
+        // Generate Previous link
+        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
+        if (currentPage > 1) {
+          let href
+          if (currentPage === 2) {
+            // Previous from page 2 goes to index
+            href = paginationIndexURLPathname
+          } else {
+            // Previous from page 3+ goes to page/(current-1)
+            if (isIndexPage) {
+              href = `${baseDir}/${segment}/${currentPage - 1}.html`
+            } else {
+              href = `${baseDir}/${currentPage - 1}.html`
+            }
+          }
+          prevItem = `<li class="page-item"><a class="page-link" href="${href}">Previous</a></li>`
         }
 
-        // add first page link
-        let items = `<li class="page-item"><a ${attributes} href="${indexURLPathname}">1</a></li>`
+        // Generate page number links
+        let items = ''
 
-        // generate page items
-        for (let i = 1; i < pages.length; i++) {
+        for (let i = 0; i < pages.length; i++) {
           const pageNum = pages[i]
           
-          // check if current item an ellipsis
           if (pageNum === '...') {
-            items += `<li class="page-item disabled"><span class="page-link">${pageNum}</span></li>`
+            items += `<li class="page-item disabled"><span class="page-link">...</span></li>`
           } else {
-            // determine if this page number matches the current page
             const isCurrent = currentPage === pageNum
-
-            let attributes = 'class="page-link"'
+            let linkAttributes = 'class="page-link"'
+            let listItemAttributes = 'class="page-item"'
 
             if (isCurrent) {
-              // add active state for current page
-              attributes = 'class="page-link active" aria-current="page"'
+              linkAttributes = 'class="page-link" aria-current="page"'
+              listItemAttributes = 'class="page-item active"'
             }
-
-            let href = `${dirname}/${segment}/${pageNum}.html`
-
-            if (values.paginationIndexPathname !== values.$filePathname) {
-              href = `${dirname}/${pageNum}.html`
-            } 
-
-            // construct link with dynamic page number and base directory path
-            items += `<li class="page-item"><a ${attributes} href="${href}">${pageNum}</a></li>`
+            
+            let href
+            if (pageNum === 1) {
+              // Page 1 is always index
+              href = paginationIndexURLPathname
+            } else {
+              // Other pages: need to handle index vs pagination page
+              if (isIndexPage) {
+                // From index: /blog/page/2
+                href = `${baseDir}/${segment}/${pageNum}.html`
+              } else {
+                // From page 2: /blog/page/2/3
+                href = `${baseDir}/${pageNum}.html`
+              }
+            }
+            
+            items += `<li ${listItemAttributes}><a ${linkAttributes} href="${href}">${pageNum}</a></li>`
           }
         }
 
+        // Generate Next link
         let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
-        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
-
-
-        // initialize previous/next items as disabled links
-        if (currentPage > 1) {
-          let href = `${dirname}/${currentPage - 1}.html`
-
-          if (currentPage === 2) {
-            // set index path
-            href = indexURLPathname
-          }
-
-          prevItem = `<li class="page-item"><a class="page-link" href="${href}">Previous</a></li>`;
-        }
-
         if (currentPage < length) {
-          const pageNum = currentPage + 1
-          let href = `${dirname}/${segment}/${pageNum}.html`
-
-          if (values.paginationIndexPathname !== values.$filePathname) {
-            href = `${dirname}/${pageNum}.html`
-          } 
-
-          nextItem = `<li class="page-item"><a class="page-link" href="${href}">Next</a></li>`;
+          const nextPage = currentPage + 1
+          let href
+          if (isIndexPage) {
+            // From index: /blog/page/2
+            href = `${baseDir}/${segment}/${nextPage}.html`
+          } else {
+            // From page 2: /blog/page/2/3
+            href = `${baseDir}/${nextPage}.html`
+          }
+          nextItem = `<li class="page-item"><a class="page-link" href="${href}">Next</a></li>`
         }
 
         return '<ul class="pagination">' + prevItem + items + nextItem + '</ul>'
