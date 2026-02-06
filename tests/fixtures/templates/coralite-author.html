@@ -1,6 +1,6 @@
 <template id="coralite-author">
   <span>{{ name }}</span>
-  <time datetime="{{ datetime }}">
+  <time ref="time" datetime="{{ datetime }}">
     {{ localeDate }}
   </time>
 </template>
@@ -9,9 +9,8 @@
   import { defineComponent } from 'coralite/plugins'
 
   export default defineComponent({
-    id: 'coralite-author',
     tokens: {
-      localeDate (values) {
+      localeDate(values) {
         return new Date(values.datetime).toLocaleDateString('en-AU', {
           weekday: 'short',
           year: '2-digit',
@@ -19,6 +18,11 @@
           day: 'numeric'
         })
       }
+    },
+    script({ values }, { refs }) {
+      const timeElement = refs('time')
+
+      timeElement.setAttribute('data-was-here', values.datetime)
     }
   })
 </script>

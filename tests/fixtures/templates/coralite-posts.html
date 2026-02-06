@@ -8,7 +8,7 @@
 
   export default defineComponent({
     tokens: {
-      posts (values) {
+      posts(values) {
         const limit = values.limit ? parseInt(values.limit) : 10
         const options = {
           id: values.pagerId,
