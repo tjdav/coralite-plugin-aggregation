@@ -7,39 +7,54 @@
 
   export default defineComponent({
     tokens: {
-      paginationList (values) {
+      paginationList(values) {
         const length = parseInt(values.paginationLength)
 
-        // skip pagination if not needed
-        if (!length) {
-          return ''
-        }
+        if (!length) return ''
 
         const maxVisible = parseInt(values.paginationMaxVisible)
         const currentPage = parseInt(values.paginationCurrent)
-        const indexURLPathname = values.paginationIndexURLPathname
         const segment = values.paginationSegment
-        const paginationFilePathname = values.paginationFilePathname
-        const paginationIndexURLPathname = values.paginationIndexURLPathname
-        const pages = []
+        const indexUrl = values.paginationIndexURLPathname
+        const isIndexPage = values.$filePathname === values.paginationIndexPathname
+        let baseDir = values.$urlDirname
 
-        if (maxVisible >= length) {
-          // show all pages when maxVisible is greater than or equal to total page count
-          for (let i = 1; i <= length; i++) {
-            pages.push(i)
+        if (!isIndexPage) {
+          baseDir = values.$urlDirname.replace(`/${segment}`, '')
+        } else if (!values.$urlPathname.endsWith('index.html')) {
+          // use filename as a directory
+          baseDir = '/' + values.$filename.replace('.html', '')
+        }
+
+        if (baseDir === '/') {
+          baseDir = ''
+        }
+
+        const getPageUrl = (page) => {
+          if (page === 1) {
+            return indexUrl
           }
+          return `${baseDir}/${segment}/${page}.html`
+        }
+
+        const pages = []
+        if (maxVisible >= length) {
+          for (let i = 1; i <= length; i++) pages.push(i)
         } else {
-          // calculate start and end of visible range based on current page position
-          let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-          let end = Math.min(length, start + maxVisible - 1);
+          // Center the active page
+          let start = currentPage - Math.floor(maxVisible / 2)
+          start = Math.max(1, start)
+          let end = start + maxVisible - 1
+
+          // Shift window if we hit the end bound
+          if (end > length) {
+            end = length
+            start = Math.max(1, end - maxVisible + 1)
+          }
 
           if (start > 1) {
             pages.push(1)
-
-            if (start > 2) {
-              // add ellipsis to indicate omitted pages before visible range
-              pages.push('...')
-            }
+            if (start > 2) pages.push('...')
           }
 
           for (let i = start; i <= end; i++) {
@@ -47,92 +62,40 @@
           }
 
           if (end < length) {
-            if (length - end > 1) {
-              // add ellipsis to indicate omitted pages after visible range
-              pages.push('...')
-            }
-
+            if (end < length - 1) pages.push('...')
             pages.push(length)
           }
         }
 
-        // Determine base URL directory and whether to add segment
-        // For index page: baseDir = /blog, needs segment = /blog/page
-        // For page 2: baseDir = /blog/page/2, no segment needed
-        const isIndexPage = values.paginationURLDirname === values.paginationIndexURLDirname
-        let baseDir = values.$urlDirname
-        
-        // Generate Previous link
-        let prevItem = '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
-        if (currentPage > 1) {
-          let href
-          if (currentPage === 2) {
-            // Previous from page 2 goes to index
-            href = paginationIndexURLPathname
-          } else {
-            // Previous from page 3+ goes to page/(current-1)
-            if (isIndexPage) {
-              href = `${baseDir}/${segment}/${currentPage - 1}.html`
-            } else {
-              href = `${baseDir}/${currentPage - 1}.html`
-            }
+        const buildItem = (label, pageNum, isDisabled = false, isActive = false) => {
+          if (isDisabled) {
+            return `<li class="page-item disabled"><span class="page-link">${label}</span></li>`
           }
-          prevItem = `<li class="page-item"><a class="page-link" href="${href}">Previous</a></li>`
+          const activeClass = isActive ? ' active' : ''
+          const aria = isActive ? ' aria-current="page"' : ''
+          return `<li class="page-item${activeClass}"><a class="page-link"${aria} href="${getPageUrl(pageNum)}">${label}</a></li>`
         }
 
-        // Generate page number links
-        let items = ''
+        let html = '<ul class="pagination">'
 
-        for (let i = 0; i < pages.length; i++) {
-          const pageNum = pages[i]
-          
-          if (pageNum === '...') {
-            items += `<li class="page-item disabled"><span class="page-link">...</span></li>`
+        // Previous
+        html += buildItem('Previous', currentPage - 1, currentPage <= 1)
+
+        // Numbered items
+        pages.forEach(page => {
+          if (page === '...') {
+            html += buildItem('...', null, true)
           } else {
-            const isCurrent = currentPage === pageNum
-            let linkAttributes = 'class="page-link"'
-            let listItemAttributes = 'class="page-item"'
-
-            if (isCurrent) {
-              linkAttributes = 'class="page-link" aria-current="page"'
-              listItemAttributes = 'class="page-item active"'
-            }
-            
-            let href
-            if (pageNum === 1) {
-              // Page 1 is always index
-              href = paginationIndexURLPathname
-            } else {
-              // Other pages: need to handle index vs pagination page
-              if (isIndexPage) {
-                // From index: /blog/page/2
-                href = `${baseDir}/${segment}/${pageNum}.html`
-              } else {
-                // From page 2: /blog/page/2/3
-                href = `${baseDir}/${pageNum}.html`
-              }
-            }
-            
-            items += `<li ${listItemAttributes}><a ${linkAttributes} href="${href}">${pageNum}</a></li>`
+            html += buildItem(page, page, false, page === currentPage)
           }
-        }
+        })
 
-        // Generate Next link
-        let nextItem = '<li class="page-item disabled"><span class="page-link">Next</span></li>'
-        if (currentPage < length) {
-          const nextPage = currentPage + 1
-          let href
-          if (isIndexPage) {
-            // From index: /blog/page/2
-            href = `${baseDir}/${segment}/${nextPage}.html`
-          } else {
-            // From page 2: /blog/page/2/3
-            href = `${baseDir}/${nextPage}.html`
-          }
-          nextItem = `<li class="page-item"><a class="page-link" href="${href}">Next</a></li>`
-        }
+        // Next
+        html += buildItem('Next', currentPage + 1, currentPage >= length)
 
-        return '<ul class="pagination">' + prevItem + items + nextItem + '</ul>'
+        html += '</ul>'
+
+        return html
       }
     }
   })
