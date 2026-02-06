@@ -40,22 +40,22 @@
     "types"
   ],
   "scripts": {
-    "build-test": "coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
+    "build-test": "premove ./dist && coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
     "test-e2e": "playwright test --reporter=list",
     "test-e2e-report": "playwright show-report",
     "test-e2e-ui": "playwright test --ui",
     "server": "sirv dist --dev --port 3000"
   },
   "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@stylistic/eslint-plugin-plus": "^4.2.0",
+    "commander": "^14.0.3",
+    "coralite": "^0.20.1",
+    "premove": "^4.0.0",
     "sirv-cli": "^3.0.1"
-  },
-  "peerDependencies": {
-    "coralite": "^0.18.7"
   },
   "dependencies": {
     "dom-serializer": "^2.0.0",
