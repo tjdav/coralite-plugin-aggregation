@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: codeberg-tiny-lazy
+    container:
+      image: "guergeiro/pnpm:22-10-slim"
+    steps:
+      - name: Checkout
+        uses: https://code.forgejo.org/actions/checkout@v4
+      
+      - name: Cache pnpm modules
+        uses: https://code.forgejo.org/actions/cache@v3
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Unit Tests
+        run: pnpm run test

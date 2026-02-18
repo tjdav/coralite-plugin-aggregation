@@ -1,6 +1,6 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
   "type": "module",
   "keywords": [
@@ -40,25 +40,15 @@
     "types"
   ],
   "scripts": {
-    "build-test": "premove ./dist && coralite -t tests/fixtures/templates -p tests/fixtures/pages -o dist",
-    "test-e2e": "playwright test --reporter=list",
-    "test-e2e-report": "playwright show-report",
-    "test-e2e-ui": "playwright test --ui",
-    "server": "sirv dist --dev --port 3000"
+    "test": "node --test ./tests/index.spec.js"
+  },
+  "peerDependencies": {
+    "coralite": "^0.22.0"
   },
   "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
+  "packageManager": "pnpm@10.30.0+sha512.2b5753de015d480eeb88f5b5b61e0051f05b4301808a82ec8b840c9d2adf7748eb352c83f5c1593ca703ff1017295bc3fdd3119abb9686efc96b9fcb18200937",
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
-    "@stylistic/eslint-plugin-plus": "^4.2.0",
-    "commander": "^14.0.3",
-    "coralite": "^0.20.1",
-    "premove": "^4.0.0",
-    "sirv-cli": "^3.0.1"
-  },
-  "dependencies": {
-    "dom-serializer": "^2.0.0",
-    "htmlparser2": "^10.0.0"
+    "@stylistic/eslint-plugin-plus": "^4.2.0"
   }
 }

@@ -1,302 +1,117 @@
 # Coralite Aggregation Plugin
 
-The **Coralite Aggregation Plugin** is a powerful tool designed to help developers dynamically collect, filter, sort, and display content across multiple sources within a Coralite project.
+A [Coralite](https://coralite.dev) plugin for aggregating pages (like blog posts) with built-in support for filtering, sorting, and pagination.
 
-
-- [Installation](#installation)
-- [Example](#example)
-- [Type definition](#types)
-- [Custom pager](#custom-pager)
-
----
-
-## Features
-
-- **Content Aggregation**: Gather content from multiple files or directories using path patterns (e.g., `blog/`, `['products/all','blog/']`).
-- **Filtering & Sorting**: Use metadata-based filters and custom sort functions to refine results based on attributes like tags, categories, dates, or tokens.
-- **Pagination Support**: Easily create paginated views with customizable templates for navigation controls and visible page links.
-- **Token Handling**: Configure token aliases, defaults, and metadata mapping.
-
----
-
-## Coralite Aggregation Plugin Guide
-
-### Installation
+## Installation
 
 ```bash
+pnpm add coralite-plugin-aggregation
+# or
 npm install coralite-plugin-aggregation
 ```
 
-### Setup Configuration
-First, enable the plugin in your `coralite.config.js`:
+## Usage
 
-```js
-// coralite.config.js
-import aggregation from 'coralite-plugin-aggregation'
+First, register the plugin in your Coralite configuration (e.g., `coralite.config.js` or wherever you initialize Coralite).
 
-export default {
-  plugins: [aggregation]
-}
-```
-
-> **Note**: The plugin must be imported as `'coralite-plugin-aggregation'` for compatibility with the core Coralite framework.
-
----
-
-### Example Implementation
-
-#### Entry Point: Displaying Aggregated Results
-Create a file like `coralite-posts.html` to define your aggregation logic and rendering template:
-
-```html
-<!-- templates/coralite-posts.html -->
-<template id="coralite-posts">
-  <div>
-    {{ posts }}
-    <!-- Pagination controls will be injected automatically if enabled. -->
-  </div>
-</template>
-
-<script type="module">
-import { defineComponent, aggregation } from 'coralite/plugins'
-
-export default defineComponent({
-  tokens: {
-    // Aggregation function returns an array of content items.
-    posts() {
-      return aggregation({
-        path: ['products'],              // Source directory.
-        template: 'coralite-post',       // Template ID for individual items.
-        limit: 20,                       // Maximum number of results per page.
-        recursive: true,                 // Include subdirectories.
-        pagination: {
-          token: 'post_count',           // Page size control token.
-          template: 'coralite-pagination', // Template for pagination controls.
-          segment: 'page',                  // Segment for paginated URLs (e.g., `page/1`).
-          maxVisible: 5                     // Max number of visible page links.
-        },
-        filter(meta) {
-          return meta.name === 'category' && meta.content === 'tech'
-        },
-        sort(a, b) {
-          return new Date(b.date) - new Date(a.date)
-        },
-        tokens: {
-          default: {
-            author: 'Anonymous',
-            category: 'uncategorized'
-          },
-          aliases: {
-            tags: ['tech', 'news', 'tutorial']
-          }
-        }
-      })
-    }
-  }
-})
-</script>
-```
-
-#### Aggregated Content Files
-Each file to be aggregated must include metadata via `<meta>` elements. For example:
-
-```html
-<!-- pages/products/product-1.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="title" content="Great Barrier Reef" />
-  <meta name="description" content="The Great Barrier Reef—largest, comprising over 2,900 individual reefs and 900 islands stretching for over 2,600 kilometers." />
-  <meta name="price" content="1000" />
-  <meta name="published_time" content="2025-01-08T20:23:07.645Z" />
-</head>
-<body>
-  <coralite-header>
-    <h1>Great Barrier Reef</h1>
-  </coralite-header>
-  <coralite-author name="Nemo" datetime="2025-01-08T20:23:07.645Z"></coralite-author>
-</body>
-</html>
-```
-
-#### Single Result Template
-Define a `<template>` element for rendering individual items:
-
-```html
-<!-- templates/coralite-post.html -->
-<template id="coralite-post">
-  <div class="post-item">
-    <h2>{{ $title }}</h2>
-    <p>{{ $description }} - {{ formattedPrice }}</p>
-  </div>
-</template>
-
-<script type="module">
-import { defineComponent } from 'coralite/plugins'
-
-export default defineComponent({
-  tokens: {
-    // Custom token to format prices using Intl.NumberFormat.
-    formattedPrice(values) {
-      return new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(
-        values.$price
-      )
-    }
-  }
-})
-</script>
-```
-
-> **Token Syntax**: Metadata attributes are accessed in templates as `$<meta name>`. For example, the `<meta name="title">` element is referenced using `$title`.
-
-
-### Configuration Options {#types}
-
-#### `CoraliteAggregate` {#coralite-aggregate}  
-Configuration object for content aggregation processes.  
-
-| Property        | Type                                                                 | Description                                                                                     | Reference |
-|-----------------|----------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|-----------|
-| `path`          | `string[]`                                                         | Array of paths relative to the pages directory (e.g., `['products', 'blog/']`).               | -         |
-| `template`      | `CoraliteAggregateTemplate` or `string`                            | Templates used to display the result. Must match an existing `<template>` element by ID.     | [CoraliteAggregateTemplate](#coralite-aggregate-template) |
-| `pagination`    | `Object`                                                           | Pagination settings (optional).                                                              | -         |
-| `filter`        | [`CoraliteAggregateFilter`](#coralite-aggregate-filter)            | Callback to filter out unwanted elements from the aggregated content.                         | [CoraliteAggregateFilter](#coralite-aggregate-filter) |
-| `recursive`     | `boolean`                                                          | Whether to recursively search subdirectories.                                                 | -         |
-| `tokens`        | [`CoraliteTokenOptions`](#coralite-token-options)                  | Token configuration options (optional).                                                       | [CoraliteTokenOptions](#coralite-token-options) |
-| `sort`          | [`CoraliteAggregateSort`](#coralite-aggregate-sort)                | Sort aggregated pages.                                                                      | [CoraliteAggregateSort](#coralite-aggregate-sort) |
-| `limit`         | `number`                                                           | Maximum number of results to retrieve (used with pagination).                                 | -         |
-| `offset`        | `number`                                                           | Starting index for the results list (used with pagination).                                   | -         |
-
----
-
-#### `CoraliteAggregateTemplate` {#coralite-aggregate-template}  
-Configuration for templates used to render aggregated results.  
-
-| Property | Type      | Description                                                                 | Reference |
-|----------|-----------|-----------------------------------------------------------------------------|-----------|
-| `item`   | `string`  | Unique identifier for the component used for each document (e.g., `'coralite-post'`). | -         |
-
----
-
-#### `CoraliteTokenOptions` {#coralite-token-options}  
-Configuration options for token handling during processing.  
-
-| Property     | Type                                                  | Description                                                                 |
-|--------------|-------------------------------------------------------|-----------------------------------------------------------------------------|
-| `default`    | `Object.<string, string>`                             | Default token values for properties not explicitly set (e.g., `{ author: 'Anonymous' }`). |
-| `aliases`    | `Object.<string, string[]>`                           | Token aliases and their possible values (e.g., `{ tags: ['tech', 'news'] }`). |
-
----
-
-#### `CoraliteAggregateFilter` {#coralite-aggregate-filter}  
-Callback function for filtering aggregated content based on metadata.  
-
-| Parameter     | Type                                | Description                                                                 |
-|---------------|-------------------------------------|-----------------------------------------------------------------------------|
-| `metadata`    | [`CoraliteToken`](#coralite-token)  | Aggregated HTML page metadata (e.g., `{ name: 'category', content: 'tech' }`). |
-
----
-
-#### `CoraliteAggregateSort` {#coralite-aggregate-sort}  
-Callback function for sorting aggregated results based on metadata.  
-
-| Parameter | Type                                | Description                                                                 |
-|-----------|-------------------------------------|-----------------------------------------------------------------------------|
-| `a`       | `Object.<string, string>`           | Metadata of the first item being compared (e.g., `{ date: '2025-01-08' }`). |
-| `b`       | `Object.<string, string>`           | Metadata of the second item being compared.                                   |
-
----
-
-#### `CoraliteToken` {#coralite-token}  
-A representation of a token with name and value.  
-
-| Property | Type   | Description                                                                 |
-|----------|--------|-----------------------------------------------------------------------------|
-| `name`   | `string`  | Token identifier (e.g., `'title'`, `'category'`).                            |
-| `content`| `string`  | Token value or content (e.g., `'Great Barrier Reef'`, `'tech'`).            |
-
----
-
-## Custom Pager Template User Guide for Coralite Pagination Component  {#custom-pager}  
-
-This guide explains how to create a custom pagination template using the existing `coralite-pagination` component as a reference. The goal is to define a new pager layout below the default implementation, preserving compatibility with the core logic while enabling customization.
-
----
-
-### Create a New Template Element
-Define a unique `<template>` element for your custom pager. Use an ID distinct from the default (`coralite-pagination`) to avoid conflicts:
-
-```html
-<template id="coralite-pagination-custom">
-  {{ paginationList }}
-</template>
-```
-
----
-
-### Implement Custom Logic in `<script type="module">`
-Replace or extend the `paginationList` token function with your custom logic. The core structure remains compatible with Coralite’s API, but you can modify rendering rules (e.g., ellipsis behavior, link formatting).
-
-#### Example: Basic Custom Token Function
 ```javascript
+import { Coralite } from 'coralite'
+import { aggregation } from 'coralite-plugin-aggregation'
+
+const coralite = new Coralite({
+  // ... other config
+  plugins: [aggregation]
+})
+```
+
+Then, you can use the `aggregation` function within your component templates.
+
+### Example: Blog List
+
+Create a template for individual items (e.g., `templates/coralite-post.html`):
+
+```html
+<template id="coralite-post">
+  <article class="post">
+    <h2><a href="{{ $urlPathname }}">{{ meta_title }}</a></h2>
+    <p>{{ meta_description }}</p>
+  </article>
+</template>
+```
+
+Create a component to list them (e.g., `templates/blog-list.html`):
+
+```html
+<template id="blog-list">
+  <div class="posts">
+    {{ posts }}
+  </div>
+</template>
+
 <script type="module">
   import { defineComponent } from 'coralite'
+  import { aggregation } from 'coralite/plugins'
 
   export default defineComponent({
     tokens: {
-      paginationList (values) {
-        const length = parseInt(values.paginationLength)
-        if (!length) return ''
-
-        // Custom logic: render a simplified pager with only previous/next and current page
-        const currentPage = parseInt(values.paginationCurrent)
-        const dirname = values.pagination_dirname[0] === '/' ? values.paginationDirname : '/' + values.pagination_dirname
-
-        let html = '<ul class="pagination">'
-
-        // Previous link
-        if (currentPage > 1) {
-          html += `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage - 1}.html">Previous</a></li>`
-        } else {
-          html += '<li class="page-item disabled"><span class="page-link">Previous</span></li>'
-        }
-
-        // Current page
-        html += `<li class="page-item active"><span class="page-link">${currentPage}</span></li>`
-
-        // Next link
-        if (currentPage < length) {
-          html += `<li class="page-item"><a class="page-link" href="${dirname}/${currentPage + 1}.html">Next</a></li>`
-        } else {
-          html += '<li class="page-item disabled"><span class="page-link">Next</span></li>'
-        }
-
-        html += '</ul>'
-        return html
+      posts: async () => {
+        return await aggregation({
+          // Path to aggregate pages from (relative to pages directory)
+          path: ['blog'],
+          // Template ID to render for each item
+          template: 'coralite-post',
+          // Sort by date descending (assuming meta_date exists)
+          sort: (a, b) => new Date(b.meta_date) - new Date(a.meta_date),
+          // Limit items per page
+          limit: 10,
+          // Enable pagination
+          pagination: {
+            segment: 'page', // URL segment: /blog/page/1
+            maxVisible: 5,   // Max pagination links to show
+            ariaLabel: 'Blog Pagination',
+            ellipsis: '...'
+          }
+        })
       }
     }
   })
 </script>
 ```
 
----
+## Configuration
 
-### Template tokens
-The pagination template receives these token values:
+The `aggregation` function accepts an options object with the following properties:
 
-| Property                      | Description                                                                 |
-|------------------------------|-----------------------------------------------------------------------------|
-| `paginationIndexPathname`   | The index path name for pagination (e.g., `/blog/index.html`).              |
-| `paginationSegment`         | The current segment of pagination (e.g., "page").                         |
-| `paginationMaxVisible`      | Maximum number of visible pages in the pagination UI.                       |
-| `paginationProcessed`       | Indicates whether the pagination has been processed (`true`/`false`).       |
-| `paginationOffset`          | String representation of the offset (used for page calculations).           |
-| `paginationFilePathname`    | The file path name for pagination context (e.g., `/blog/page-2.html`).      |
-| `paginationFileDirname`     | The directory name of the file for pagination context (e.g., `/blog`).      |
-| `paginationURLPathname`     | The URL path name used in pagination (e.g., `/blog/`).                      |
-| `paginationURLDirname`      | The URL directory name used in pagination (e.g., `/blog`).                  |
-| `paginationLength`          | Total length of the paginated data set (used to determine total page count).|
-| `paginationCurrent`         | Current page index (as a string, e.g., "2").                                |
+| Property | Type | Description |
+|----------|------|-------------|
+| `path` | `string[]` | Array of paths to aggregate pages from, relative to the `pages` directory. |
+| `template` | `string` | The ID of the template component to use for rendering each aggregated item. |
+| `limit` | `number` | Maximum number of items to display per page. |
+| `offset` | `number` | Starting index for the results (default: 0). |
+| `recursive` | `boolean` | Whether to recursively search subdirectories (default: `false`). |
+| `filter` | `function` | Callback to filter pages. Receives page values, returns `true`/`false`. |
+| `sort` | `function` | Callback to sort pages. Receives `(a, b)` values. |
+| `tokens` | `Object` | Map of token names to transform functions or value keys. |
+| `pagination` | `Object` | Pagination configuration object. |
 
----
+### Pagination Options
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `segment` | `string` | `'page'` | The URL segment used for pagination (e.g., `/page/2`). |
+| `maxVisible` | `number` | `5` | Maximum number of visible page links in the pagination control. |
+| `ariaLabel` | `string` | `'Pagination'` | Aria label for the navigation element. |
+| `ellipsis` | `string` | `'...'` | Text to display for truncated page links. |
+| `template` | `string` | `'coralite-pagination'` | Custom template ID for the pagination control. |
+
+## How Pagination Works
+
+When `pagination` is enabled and `limit` is set:
+
+1.  **Automatic Page Generation**: If placed on a root page (e.g., `/blog/index.html`), the plugin automatically generates virtual pages for subsequent pages (e.g., `/blog/page/2.html`, `/blog/page/3.html`).
+2.  **Context Aware**: It detects the current page from the URL to determine the correct offset and active page state.
+3.  **Default Template**: A default Bootstrap-compatible pagination template (`coralite-pagination`) is provided out of the box.
+
+## License
+
+AGPL-3.0-or-later

@@ -1,5 +1,9 @@
 <template id="coralite-pagination">
-  {{ paginationList }}
+  <nav aria-label="{{ ariaLabel }}">
+    <ul class="pagination">
+      {{ paginationLinks }}
+    </ul>
+  </nav>
 </template>
 
 <script type="module">
@@ -7,95 +11,112 @@
 
   export default defineComponent({
     tokens: {
-      paginationList(values) {
-        const length = parseInt(values.paginationLength)
+      ariaLabel(context) {
+        return context['aria-label'] || 'Page navigation'
+      },
+      /**
+       * Generates HTML pagination links based on the provided context.
+       *
+       * @param {Object} context - The context object containing pagination details.
+       * @param {string} context['current-page'] - The current page number (1-based).
+       * @param {string} context['total-pages'] - The total number of pages.
+       * @param {string} context['base-url'] - The explicit URL for Page 1 (e.g., '/blog.html').
+       * @param {string} context['url-prefix'] - The directory prefix for paginated segments (e.g., '/blog').
+       * @param {string} [context.segment='page'] - The URL segment for pagination (default: 'page').
+       * @param {string} [context.max-visible='5'] - Max number of direct page links to show.
+       * @param {string} [context.ellipsis='...'] - Text to display for skipped pages.
+       * @returns {string} - A string containing the HTML <li> elements.
+       */
+      paginationLinks(context) {
+        // Parse inputs with defaults
+        const currentPage = parseInt(context['current-page'] || '1', 10)
+        const totalPages = parseInt(context['total-pages'] || '1', 10)
+        const maxVisible = parseInt(context['max-visible'] || '5', 10)
+        
+        const baseUrl = context['base-url'] || ''
+        const urlPrefix = context['url-prefix'] || ''
+        const segment = context['segment'] || 'page'
+        const ellipsis = context['ellipsis'] || '...'
 
-        if (!length) return ''
-
-        const maxVisible = parseInt(values.paginationMaxVisible)
-        const currentPage = parseInt(values.paginationCurrent)
-        const segment = values.paginationSegment
-        const indexUrl = values.paginationIndexURLPathname
-        const isIndexPage = values.$filePathname === values.paginationIndexPathname
-        let baseDir = values.$urlDirname
-
-        if (!isIndexPage) {
-          baseDir = values.$urlDirname.replace(`/${segment}`, '')
-        } else if (!values.$urlPathname.endsWith('index.html')) {
-          // use filename as a directory
-          baseDir = '/' + values.$filename.replace('.html', '')
-        }
-
-        if (baseDir === '/') {
-          baseDir = ''
-        }
-
+        /**
+         * Constructs the URL for a specific page.
+         * 1. Page 1 links strictly to `base-url` (canonical root).
+         * 2. Pages > 1 follow the pattern: `{url-prefix}/{segment}/{page}.html`.
+         */
         const getPageUrl = (page) => {
           if (page === 1) {
-            return indexUrl
+            return baseUrl
           }
-          return `${baseDir}/${segment}/${page}.html`
+          
+          // Ensure prefix has a trailing slash for concatenation
+          const cleanPrefix = urlPrefix.endsWith('/') ? urlPrefix : `${urlPrefix}/`
+          return `${cleanPrefix}${segment}/${page}.html`
         }
 
-        const pages = []
-        if (maxVisible >= length) {
-          for (let i = 1; i <= length; i++) pages.push(i)
-        } else {
-          // Center the active page
-          let start = currentPage - Math.floor(maxVisible / 2)
-          start = Math.max(1, start)
-          let end = start + maxVisible - 1
+        // Helper to generate list items
+        const createItem = (page, text, isActive, isDisabled) => {
+          let className = 'page-item'
+          if (isActive) className += ' active'
+          if (isDisabled) className += ' disabled'
 
-          // Shift window if we hit the end bound
-          if (end > length) {
-            end = length
-            start = Math.max(1, end - maxVisible + 1)
-          }
+          let attr = ''
+          if (isActive) attr += ' aria-current="page"'
+          if (isDisabled) attr += ' tabindex="-1" aria-disabled="true"'
 
-          if (start > 1) {
-            pages.push(1)
-            if (start > 2) pages.push('...')
-          }
+          const href = isDisabled ? '#' : getPageUrl(page)
 
-          for (let i = start; i <= end; i++) {
-            pages.push(i)
-          }
+          return `<li class="${className}"><a class="page-link" href="${href}"${attr}>${text}</a></li>`
+        }
 
-          if (end < length) {
-            if (end < length - 1) pages.push('...')
-            pages.push(length)
+        let links = ''
+
+        // Previous Link
+        links += createItem(currentPage - 1, 'Previous', false, currentPage <= 1)
+
+        // Calculate Window (Start/End)
+        const half = Math.floor(maxVisible / 2)
+        let start = currentPage - half
+        let end = currentPage + half
+
+        if (start < 1) {
+          start = 1
+          end = Math.min(totalPages, maxVisible)
+        }
+
+        if (end > totalPages) {
+          end = totalPages
+          start = Math.max(1, totalPages - maxVisible + 1)
+        }
+
+        // Render Pages with ellipsis
+        const showFirst = start > 1
+        const showLast = end < totalPages
+
+        // First page + ellipsis if window doesn't touch start
+        if (showFirst) {
+          links += createItem(1, '1', false, false)
+          if (start > 2) {
+            links += `<li class="page-item disabled"><span class="page-link">${ellipsis}</span></li>`
           }
         }
 
-        const buildItem = (label, pageNum, isDisabled = false, isActive = false) => {
-          if (isDisabled) {
-            return `<li class="page-item disabled"><span class="page-link">${label}</span></li>`
-          }
-          const activeClass = isActive ? ' active' : ''
-          const aria = isActive ? ' aria-current="page"' : ''
-          return `<li class="page-item${activeClass}"><a class="page-link"${aria} href="${getPageUrl(pageNum)}">${label}</a></li>`
+        // Main window loop
+        for (let i = start; i <= end; i++) {
+          links += createItem(i, i, i === currentPage, false)
         }
 
-        let html = '<ul class="pagination">'
-
-        // Previous
-        html += buildItem('Previous', currentPage - 1, currentPage <= 1)
-
-        // Numbered items
-        pages.forEach(page => {
-          if (page === '...') {
-            html += buildItem('...', null, true)
-          } else {
-            html += buildItem(page, page, false, page === currentPage)
+        // Last page + ellipsis if window doesn't touch end
+        if (showLast) {
+          if (end < totalPages - 1) {
+            links += `<li class="page-item disabled"><span class="page-link">${ellipsis}</span></li>`
           }
-        })
+          links += createItem(totalPages, totalPages, false, false)
+        }
 
-        // Next
-        html += buildItem('Next', currentPage + 1, currentPage >= length)
+        // Next Link
+        links += createItem(currentPage + 1, 'Next', false, currentPage >= totalPages)
 
-        html += '</ul>'
-
-        return html
+        return links
       }
     }
   })

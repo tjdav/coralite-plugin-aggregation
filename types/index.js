@@ -1,56 +1,23 @@
 /**
- * @import {CoraliteToken, CoraliteTokenOptions, CoraliteDocument } from 'coralite/types'
+ * @typedef {Object} AggregationPaginationOptions
+ * @property {string} [segment='page'] - The URL segment used for pagination (e.g., /blog/page/2).
+ * @property {string} [template='coralite-pagination'] - The ID of the component template to use for rendering pagination controls.
+ * @property {number} [maxVisible=5] - The maximum number of pagination links to display.
+ * @property {string} [ariaLabel='Pagination'] - The ARIA label for the pagination navigation element.
+ * @property {string} [ellipsis='...'] - The text to display for truncated page numbers.
  */
 
 /**
- * Configuration for templates used to render aggregated results.
- * @typedef {Object} CoraliteAggregateTemplate - Templates used to display the result
- * @property {string} item - Unique identifier for the component used for each document
- */
-
-/**
- * Callback function for filtering aggregated content based on metadata.
- * @callback CoraliteAggregateFilter
- * @param {CoraliteToken} metadata - Aggregated HTML page metadata
- */
-
-/**
- * Callback function for sorting aggregated results based on metadata.
- * @callback CoraliteAggregateSort
- * @param {Object.<string, (string | CoraliteToken[])>} a - Aggregated HTML page metadata
- * @param {Object.<string, (string | CoraliteToken[])>} b - Aggregated HTML page metadata
- */
-
-/**
- * Configuration object for content aggregation processes.
- * @typedef {Object} CoraliteAggregate – Configuration object for the aggregation process
- * @property {string[]} path - The path to aggregate, relative to pages directory
- * @property {CoraliteAggregateTemplate | string} template - Templates used to display the result
- * @property {Object} [pagination]
- * @property {CoraliteAggregateTemplate | string} pagination.template - Pagination template ID
- * @property {string} [pagination.segment='page'] - Pagination page segment (e.g. 'page' will result in 'page/1')
- * @property {number} pagination.maxVisible - Maximum visible number of pages.
- * @property {CoraliteAggregateFilter} [filter] - Callback to filter out unwanted elements from the aggregated content.
- * @property {boolean} [recursive] - Whether to recursively search subdirectories
- * @property {CoraliteTokenOptions} [tokens] - Token configuration options
- * @property {CoraliteAggregateSort} [sort] - Sort aggregated pages
- * @property {number} [limit] - Specifies the maximum number of results to retrieve.
- * @property {number} [offset] - Specifies the starting index for the results list.
- */
-
-/**
- * @typedef {Object} PaginationMetadata
- * @property {string} paginationIndexPathname - The index path name for pagination.
- * @property {string} paginationSegment - The current segment of pagination.
- * @property {number} paginationMaxVisible - Maximum number of visible pages in the pagination UI.
- * @property {boolean} paginationProcessed - Indicates whether the pagination has been processed.
- * @property {string} paginationOffset - String representation of the offset.
- * @property {string} paginationFilePathname - The file path name for pagination context.
- * @property {string} paginationFileDirname - The directory name of the file for pagination context.
- * @property {string} paginationURLPathname - The URL path name used in pagination.
- * @property {string} paginationURLDirname - The URL directory name used in pagination.
- * @property {number} paginationLength - Total length of the paginated data set.
- * @property {number} paginationCurrent - Current page index (as a string).
+ * @typedef {Object} AggregationOptions
+ * @property {string[]} [path=[]] - An array of relative paths to search for pages within `pagesRoot`.
+ * @property {string} [template] - The component ID to use for rendering each item found.
+ * @property {AggregationPaginationOptions} [pagination] - Configuration for pagination logic and controls. If present, pagination logic is enabled.
+ * @property {function(Object): boolean} [filter] - A callback function to filter pages. It receives the page values object and should return `true` to keep the item.
+ * @property {function(Object, Object): number} [sort] - A comparison function for sorting pages. It receives two page value objects (a, b) and should return a number.
+ * @property {number} [limit] - The maximum number of items to return (or items per page if pagination is used).
+ * @property {number} [offset=0] - The starting index for fetching items.
+ * @property {boolean} [recursive=false] - If true, searches subdirectories of the specified paths.
+ * @property {Object.<string, (string|function(Object): *)>} [tokens] - A map of key transformations. Keys are the new property names. Values can be a string (source property name) or a function (receiving page values and returning the new value).
  */
 
 export default {}
