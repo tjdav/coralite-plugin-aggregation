@@ -1,6 +1,6 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
   "type": "module",
   "keywords": [
@@ -43,7 +43,7 @@
     "test": "node --test ./tests/index.spec.js"
   },
   "peerDependencies": {
-    "coralite": "^0.22.0"
+    "coralite": "^0.22.1"
   },
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@10.30.0+sha512.2b5753de015d480eeb88f5b5b61e0051f05b4301808a82ec8b840c9d2adf7748eb352c83f5c1593ca703ff1017295bc3fdd3119abb9686efc96b9fcb18200937",
