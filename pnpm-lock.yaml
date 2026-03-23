@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      coralite:
-        specifier: ^0.22.0
-        version: 0.22.0
     devDependencies:
       '@stylistic/eslint-plugin-js':
         specifier: ^4.2.0
@@ -18,6 +14,9 @@ importers:
       '@stylistic/eslint-plugin-plus':
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0)
+      coralite:
+        specifier: 0.29.0
+        version: 0.29.0
 
 packages:
 
@@ -257,8 +256,17 @@ packages:
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
+  acorn-walk@8.3.5:
+    resolution: {integrity: sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw==}
+    engines: {node: '>=0.4.0'}
+
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.16.0:
+    resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -300,8 +308,8 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  coralite@0.22.0:
-    resolution: {integrity: sha512-W4Fy1SB4ucY0af0dLVlEOhR12cQtX5h4z7ORHo1I8IjLuvpE/7Z2zFGno2xHCZda4ofJPNovYaMabWoXeZdT2A==}
+  coralite@0.29.0:
+    resolution: {integrity: sha512-5jPfzUqZzY9MwEsd29D+cxe2+Np6vY+crKUEI2rY+8qv052k7XzCA5iJSrfwZtNSNRmRZq2yK5/xbo3reeuG6A==}
     engines: {node: '>20.19.0'}
     hasBin: true
 
@@ -764,7 +772,13 @@ snapshots:
     dependencies:
       acorn: 8.14.1
 
+  acorn-walk@8.3.5:
+    dependencies:
+      acorn: 8.16.0
+
   acorn@8.14.1: {}
+
+  acorn@8.16.0: {}
 
   ajv@6.12.6:
     dependencies:
@@ -803,8 +817,10 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  coralite@0.22.0:
+  coralite@0.29.0:
     dependencies:
+      acorn: 8.16.0
+      acorn-walk: 8.3.5
       commander: 13.1.0
       dom-serializer: 2.0.0
       esbuild: 0.25.12
