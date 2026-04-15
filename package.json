@@ -43,13 +43,13 @@
     "test": "node --test ./tests/index.spec.js"
   },
   "peerDependencies": {
-    "coralite": "^0.29.0"
+    "coralite": "^0.31.7"
   },
   "license": "AGPL-3.0-only",
   "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
   "devDependencies": {
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@stylistic/eslint-plugin-plus": "^4.2.0",
-    "coralite": "0.29.0"
+    "coralite": "^0.31.7"
   }
 }
