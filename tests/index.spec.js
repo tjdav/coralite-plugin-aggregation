@@ -72,6 +72,7 @@ test('aggregation plugin integration', async (t) => {
   await fs.writeFile(path.join(pagesDir, 'subdir', 'index.html'), `<!DOCTYPE html><html><body><blog-list></blog-list></body></html>`)
 
   const coralite = new Coralite({
+    output: 'dist',
     components: templatesDir,
     pages: pagesDir,
     plugins: [aggregation]
