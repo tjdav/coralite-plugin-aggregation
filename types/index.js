@@ -17,7 +17,7 @@
  * @property {number} [limit] - The maximum number of items to return (or items per page if pagination is used).
  * @property {number} [offset=0] - The starting index for fetching items.
  * @property {boolean} [recursive=false] - If true, searches subdirectories of the specified paths.
- * @property {Object.<string, (string|function(Object): *)>} [tokens] - A map of key transformations. Keys are the new property names. Values can be a string (source property name) or a function (receiving page values and returning the new value).
+ * @property {Object.<string, (string|function(Object): *)>} [transformProperties] - A map of key transformations. Keys are the new property names. Values can be a string (source property name) or a function (receiving page values and returning the new value).
  */
 
 export default {}
