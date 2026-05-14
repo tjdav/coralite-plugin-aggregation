@@ -4,6 +4,6 @@ import { defineConfig } from 'coralite'
 export default defineConfig({
   output: './dist',
   pages: './tests/fixtures/pages',
-  templates: './tests/fixtures/templates',
+  components: './tests/fixtures/templates',
   plugins: [aggregation]
 })
