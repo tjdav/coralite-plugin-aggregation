@@ -15,8 +15,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0(eslint@9.27.0)
       coralite:
-        specifier: ^0.33.1
-        version: 0.33.1
+        specifier: ^0.34.0
+        version: 0.34.0
 
 packages:
 
@@ -317,8 +317,8 @@ packages:
   confbox@0.2.4:
     resolution: {integrity: sha512-ysOGlgTFbN2/Y6Cg3Iye8YKulHw+R2fNXHrgSmXISQdMnomY6eNDprVdW9R5xBguEqI954+S6709UyiO7B+6OQ==}
 
-  coralite@0.33.1:
-    resolution: {integrity: sha512-joYYnVE1eY+qIIEXWi5Tld1kKCAkz0lM9FVl6Bjk0hGInzg2XmQ5GVFUSsfzNZASwyzI0A3y1nU6vJjGzvQ2Gw==}
+  coralite@0.34.0:
+    resolution: {integrity: sha512-Rx3ZrnQiFc6yK21v4Mu9B5feZ10smoBV6XPxFxLYxPcTsOcXC9LEWtyqckaqsHJ7D4Zayrz/HIt1wUE96VhNAg==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -820,7 +820,7 @@ snapshots:
 
   acorn-walk@8.3.5:
     dependencies:
-      acorn: 8.16.0
+      acorn: 8.14.1
 
   acorn@8.14.1: {}
 
@@ -867,7 +867,7 @@ snapshots:
 
   confbox@0.2.4: {}
 
-  coralite@0.33.1:
+  coralite@0.34.0:
     dependencies:
       acorn: 8.16.0
       acorn-walk: 8.3.5
