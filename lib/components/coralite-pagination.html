@@ -10,94 +10,89 @@
   import { defineComponent } from 'coralite/plugins'
 
   export default defineComponent({
-    properties: (context) => {
-      const props = context.properties
-      
-      const ariaLabel = props['aria-label'] || 'Page navigation'
-      
-      const currentPage = parseInt(props['current-page'] || '1', 10)
-      const totalPages = parseInt(props['total-pages'] || '1', 10)
-      const maxVisible = parseInt(props['max-visible'] || '5', 10)
-      
-      const baseUrl = props['base-url'] || ''
-      const urlPrefix = props['url-prefix'] || ''
-      const segment = props['segment'] || 'page'
-      const ellipsis = props['ellipsis'] || '...'
+    attributes: {
+      ariaLabel: { type: String, default: 'Page navigation' },
+      currentPage: { type: Number, default: 1 },
+      totalPages: { type: Number, default: 1 },
+      maxVisible: { type: Number, default: 5 },
+      baseUrl: { type: String, default: '' },
+      urlPrefix: { type: String, default: '' },
+      segment: { type: String, default: 'page' },
+      ellipsis: { type: String, default: '...' }
+    },
+    getters: {
+      paginationLinks: (state) => {
+        const getPageUrl = (page) => {
+          if (page === 1) {
+            return state.baseUrl;
+          }
 
-      // Compute pagination synchronously
-      const getPageUrl = (page) => {
-        if (page === 1) {
-          return baseUrl
+          const cleanPrefix = state.urlPrefix.endsWith('/') ? state.urlPrefix : `${state.urlPrefix}/`;
+          return `${cleanPrefix}${state.segment}/${page}.html`;
         }
-        
-        const cleanPrefix = urlPrefix.endsWith('/') ? urlPrefix : `${urlPrefix}/`
-        return `${cleanPrefix}${segment}/${page}.html`
-      }
 
-      const createItem = (page, text, isActive, isDisabled) => {
-        let className = 'page-item'
-        if (isActive) className += ' active'
-        if (isDisabled) className += ' disabled'
+        const createItem = (page, text, isActive, isDisabled) => {
+          let className = 'page-item';
+          if (isActive) className += ' active';
+          if (isDisabled) className += ' disabled';
 
-        let attr = ''
-        if (isActive) attr += ' aria-current="page"'
-        if (isDisabled) attr += ' tabindex="-1" aria-disabled="true"'
+          let attr = '';
+          if (isActive) attr += ' aria-current="page"';
+          if (isDisabled) attr += ' tabindex="-1" aria-disabled="true"';
 
-        const href = isDisabled ? '#' : getPageUrl(page)
+          const href = isDisabled ? '#' : getPageUrl(page);
 
-        return `<li class="${className}"><a class="page-link" href="${href}"${attr}>${text}</a></li>`
-      }
-
-      let links = ''
-
-      // Previous Link
-      links += createItem(currentPage - 1, 'Previous', false, currentPage <= 1)
-
-      // Calculate Window (Start/End)
-      const half = Math.floor(maxVisible / 2)
-      let start = currentPage - half
-      let end = currentPage + half
-
-      if (start < 1) {
-        start = 1
-        end = Math.min(totalPages, maxVisible)
-      }
-
-      if (end > totalPages) {
-        end = totalPages
-        start = Math.max(1, totalPages - maxVisible + 1)
-      }
-
-      const showFirst = start > 1
-      const showLast = end < totalPages
-
-      // First page + ellipsis
-      if (showFirst) {
-        links += createItem(1, '1', false, false)
-        if (start > 2) {
-          links += `<li class="page-item disabled"><span class="page-link">${ellipsis}</span></li>`
+          return `<li class="${className}"><a class="page-link" href="${href}"${attr}>${text}</a></li>`;
         }
-      }
 
-      // Main window loop
-      for (let i = start; i <= end; i++) {
-        links += createItem(i, i, i === currentPage, false)
-      }
+        let links = '';
 
-      // Last page + ellipsis
-      if (showLast) {
-        if (end < totalPages - 1) {
-          links += `<li class="page-item disabled"><span class="page-link">${ellipsis}</span></li>`
+        // Previous Link
+        links += createItem(state.currentPage - 1, 'Previous', false, state.currentPage <= 1);
+
+        // Calculate Window (Start/End)
+        const half = Math.floor(state.maxVisible / 2);
+        let start = state.currentPage - half;
+        let end = state.currentPage + half;
+
+        if (start < 1) {
+          start = 1;
+          end = Math.min(state.totalPages, state.maxVisible);
         }
-        links += createItem(totalPages, totalPages, false, false)
-      }
 
-      // Next Link
-      links += createItem(currentPage + 1, 'Next', false, currentPage >= totalPages)
+        if (end > state.totalPages) {
+          end = state.totalPages;
+          start = Math.max(1, state.totalPages - state.maxVisible + 1);
+        }
 
-      return {
-        ariaLabel,
-        paginationLinks: links
+        const showFirst = start > 1;
+        const showLast = end < state.totalPages;
+
+        // First page + ellipsis
+        if (showFirst) {
+          links += createItem(1, '1', false, false);
+          if (start > 2) {
+            links += `<li class="page-item disabled"><span class="page-link">${state.ellipsis}</span></li>`;
+          }
+        }
+
+        // Main window loop
+        for (let i = start; i <= end; i++) {
+          links += createItem(i, i, i === state.currentPage, false);
+        }
+
+        // Last page + ellipsis
+        if (showLast) {
+          if (end < state.totalPages - 1) {
+            links += `<li class="page-item disabled"><span class="page-link">${state.ellipsis}</span></li>`;
+          }
+          links += createItem(state.totalPages, state.totalPages, false, false);
+        }
+
+        // Next Link
+        links += createItem(state.currentPage + 1, 'Next', false, state.currentPage >= state.totalPages);
+
+        return links;
       }
     }
   })
