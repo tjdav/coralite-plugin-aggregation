@@ -33,10 +33,24 @@ Create a template for individual items (e.g., `templates/coralite-post.html`):
 ```html
 <template id="coralite-post">
   <article class="post">
-    <h2><a href="{{ $urlPathname }}">{{ meta_title }}</a></h2>
-    <p>{{ meta_description }}</p>
+    <h2><a href="{{ url }}">{{ title }}</a></h2>
+    <p>{{ description }}</p>
   </article>
 </template>
+
+<script type="module">
+  import { defineComponent } from 'coralite'
+
+  export default defineComponent({
+    data: ({ page }) => {
+      return {
+        url: page.url.pathname,
+        title: page.meta.title,
+        description: page.meta.description
+      }
+    }
+  })
+</script>
 ```
 
 Create a component to list them (e.g., `templates/blog-list.html`):
@@ -50,28 +64,30 @@ Create a component to list them (e.g., `templates/blog-list.html`):
 
 <script type="module">
   import { defineComponent } from 'coralite'
-  import { aggregation } from 'coralite/plugins'
+  import { aggregate } from 'aggregation'
 
   export default defineComponent({
-    tokens: {
-      posts: async () => {
-        return await aggregation({
-          // Path to aggregate pages from (relative to pages directory)
-          path: ['blog'],
-          // Template ID to render for each item
-          template: 'coralite-post',
-          // Sort by date descending (assuming meta_date exists)
-          sort: (a, b) => new Date(b.meta_date) - new Date(a.meta_date),
-          // Limit items per page
-          limit: 10,
-          // Enable pagination
-          pagination: {
-            segment: 'page', // URL segment: /blog/page/1
-            maxVisible: 5,   // Max pagination links to show
-            ariaLabel: 'Blog Pagination',
-            ellipsis: '...'
-          }
-        })
+    data: async () => {
+      const posts = await aggregate({
+        // Path to aggregate pages from (relative to pages directory)
+        path: ['blog'],
+        // Template ID to render for each item
+        template: 'coralite-post',
+        // Sort by date descending (assuming meta.date exists)
+        sort: (a, b) => new Date(b.meta.date) - new Date(a.meta.date),
+        // Limit items per page
+        limit: 10,
+        // Enable pagination
+        pagination: {
+          segment: 'page', // URL segment: /blog/page/1
+          maxVisible: 5,   // Max pagination links to show
+          ariaLabel: 'Blog Pagination',
+          ellipsis: '...'
+        }
+      })
+
+      return {
+        posts
       }
     }
   })
@@ -114,4 +130,4 @@ When `pagination` is enabled and `limit` is set:
 
 ## License
 
-AGPL-3.0-or-later
+MPL-2.0
