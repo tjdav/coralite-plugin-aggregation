@@ -4,12 +4,12 @@
 </template>
 
 <script type="module">
-  import { defineComponent } from 'coralite/plugins'
+  import { defineComponent } from 'coralite'
   import { aggregate } from 'aggregation'
 
   export default defineComponent({
     data: async () => {
-      const content = await aggregation({
+      const content = await aggregate({
         path: ['blog'],
         template: 'coralite-post',
         limit: 2,
