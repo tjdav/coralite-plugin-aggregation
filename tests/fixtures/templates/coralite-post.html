@@ -1,0 +1,17 @@
+
+<template id="coralite-post">
+  <article><h2>{{ title }}</h2></article>
+</template>
+
+<script type="module">
+  import { defineComponent } from 'coralite/plugins'
+
+  export default defineComponent({
+    data: () => {
+      return {
+        // Read directly from the page metadata or flat properties
+        title: this.page.meta.title  || 'Untitled'
+      }
+    }
+  })
+</script>

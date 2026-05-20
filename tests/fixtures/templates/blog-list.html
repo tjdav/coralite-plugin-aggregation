@@ -1,0 +1,31 @@
+
+<template id="blog-list">
+  <div class="list">{{ content }}</div>
+</template>
+
+<script type="module">
+  import { defineComponent } from 'coralite/plugins'
+  import { aggregate } from 'aggregation'
+
+  export default defineComponent({
+    data: async () => {
+      const content = await aggregation({
+        path: ['blog'],
+        template: 'coralite-post',
+        limit: 2,
+        recursive: false,
+        pagination: {
+          segment: 'p',
+          maxVisible: 3,
+          ariaLabel: 'Blog Pagination',
+          ellipsis: '---'
+        }
+      })
+
+      // Bridge the computed HTML nodes to the dumb template
+      return {
+        content
+      }
+    }
+  })
+</script>
