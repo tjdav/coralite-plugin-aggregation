@@ -1,5 +1,8 @@
 # Coralite Aggregation Plugin
 
+[![npm version](https://img.shields.io/npm/v/coralite-plugin-aggregation.svg)](https://www.npmjs.com/package/coralite-plugin-aggregation)
+[![License](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](https://codeberg.org/tjdavid/coralite-plugin-aggregation/src/branch/main/LICENSE)
+
 A [Coralite](https://coralite.dev) plugin for aggregating pages (like blog posts) with built-in support for filtering, sorting, and pagination.
 
 ## Installation
@@ -16,7 +19,7 @@ First, register the plugin in your Coralite configuration (e.g., `coralite.confi
 
 ```javascript
 import { Coralite } from 'coralite'
-import { aggregation } from 'coralite-plugin-aggregation'
+import aggregation from 'coralite-plugin-aggregation'
 
 const coralite = new Coralite({
   // ... other config
@@ -28,7 +31,7 @@ Then, you can use the `aggregation` function within your component templates.
 
 ### Example: Blog List
 
-Create a template for individual items (e.g., `templates/coralite-post.html`):
+Create a template for individual items (e.g., `components/coralite-post.html`):
 
 ```html
 <template id="coralite-post">
@@ -53,7 +56,7 @@ Create a template for individual items (e.g., `templates/coralite-post.html`):
 </script>
 ```
 
-Create a component to list them (e.g., `templates/blog-list.html`):
+Create a component to list them (e.g., `components/blog-list.html`):
 
 ```html
 <template id="blog-list">
@@ -96,7 +99,7 @@ Create a component to list them (e.g., `templates/blog-list.html`):
 
 ## Configuration
 
-The `aggregation` function accepts an options object with the following properties:
+The `aggregate` function accepts an options object with the following properties:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -107,7 +110,7 @@ The `aggregation` function accepts an options object with the following properti
 | `recursive` | `boolean` | Whether to recursively search subdirectories (default: `false`). |
 | `filter` | `function` | Callback to filter pages. Receives page values, returns `true`/`false`. |
 | `sort` | `function` | Callback to sort pages. Receives `(a, b)` values. |
-| `tokens` | `Object` | Map of token names to transform functions or value keys. |
+| `transformState` | `Object` | Map of property names to transform functions or source property keys. |
 | `pagination` | `Object` | Pagination configuration object. |
 
 ### Pagination Options
@@ -116,9 +119,28 @@ The `aggregation` function accepts an options object with the following properti
 |----------|------|---------|-------------|
 | `segment` | `string` | `'page'` | The URL segment used for pagination (e.g., `/page/2`). |
 | `maxVisible` | `number` | `5` | Maximum number of visible page links in the pagination control. |
-| `ariaLabel` | `string` | `'Pagination'` | Aria label for the navigation element. |
+| `ariaLabel` | `string` | `'Page navigation'` | Aria label for the navigation element. |
 | `ellipsis` | `string` | `'...'` | Text to display for truncated page links. |
-| `template` | `string` | `'coralite-pagination'` | Custom template ID for the pagination control. |
+| `component` | `string` | `'coralite-pagination'` | Custom template ID for the pagination control. |
+
+### Transform State
+
+The `transformState` option allows you to remap or transform the state of each aggregated item before it's passed to the item template. This is useful for mapping metadata keys to the properties expected by your component.
+
+```javascript
+const posts = await aggregate({
+  path: ['blog'],
+  template: 'coralite-post',
+  transformState: {
+    // Map 'meta.title' from the page to 'displayTitle' in the component
+    displayTitle: 'title',
+    // Use a function for more complex transformations
+    excerpt: (state) => state.description.substring(0, 100) + '...',
+    // Pass through or format dates
+    date: (state) => new Date(state.date).toLocaleDateString()
+  }
+})
+```
 
 ## How Pagination Works
 
