@@ -27,11 +27,11 @@ const coralite = new Coralite({
 })
 ```
 
-Then, you can use the `aggregation` function within your component templates.
+Then, you can use the `aggregation` function within your component.
 
 ### Example: Blog List
 
-Create a template for individual items (e.g., `components/coralite-post.html`):
+Create a component for individual items (e.g., `components/coralite-post.html`):
 
 ```html
 <template id="coralite-post">
@@ -75,7 +75,7 @@ Create a component to list them (e.g., `components/blog-list.html`):
         // Path to aggregate pages from (relative to pages directory)
         path: ['blog'],
         // Template ID to render for each item
-        template: 'coralite-post',
+        component: 'coralite-post',
         // Sort by date descending (assuming meta.date exists)
         sort: (a, b) => new Date(b.meta.date) - new Date(a.meta.date),
         // Limit items per page
@@ -104,7 +104,7 @@ The `aggregate` function accepts an options object with the following properties
 | Property | Type | Description |
 |----------|------|-------------|
 | `path` | `string[]` | Array of paths to aggregate pages from, relative to the `pages` directory. |
-| `template` | `string` | The ID of the template component to use for rendering each aggregated item. |
+| `component` | `string` | The ID of the component to use for rendering each aggregated item. |
 | `limit` | `number` | Maximum number of items to display per page. |
 | `offset` | `number` | Starting index for the results (default: 0). |
 | `recursive` | `boolean` | Whether to recursively search subdirectories (default: `false`). |
@@ -121,7 +121,7 @@ The `aggregate` function accepts an options object with the following properties
 | `maxVisible` | `number` | `5` | Maximum number of visible page links in the pagination control. |
 | `ariaLabel` | `string` | `'Page navigation'` | Aria label for the navigation element. |
 | `ellipsis` | `string` | `'...'` | Text to display for truncated page links. |
-| `component` | `string` | `'coralite-pagination'` | Custom template ID for the pagination control. |
+| `component` | `string` | `'coralite-pagination'` | Custom component ID for the pagination control. |
 
 ### Transform State
 
@@ -130,7 +130,7 @@ The `transformState` option allows you to remap or transform the state of each a
 ```javascript
 const posts = await aggregate({
   path: ['blog'],
-  template: 'coralite-post',
+  component: 'coralite-post',
   transformState: {
     // Map 'meta.title' from the page to 'displayTitle' in the component
     displayTitle: 'title',
@@ -148,7 +148,7 @@ When `pagination` is enabled and `limit` is set:
 
 1.  **Automatic Page Generation**: If placed on a root page (e.g., `/blog/index.html`), the plugin automatically generates virtual pages for subsequent pages (e.g., `/blog/page/2.html`, `/blog/page/3.html`).
 2.  **Context Aware**: It detects the current page from the URL to determine the correct offset and active page state.
-3.  **Default Template**: A default Bootstrap-compatible pagination template (`coralite-pagination`) is provided out of the box.
+3.  **Default Template**: A default Bootstrap-compatible pagination component (`coralite-pagination`) is provided out of the box.
 
 ## License
 
