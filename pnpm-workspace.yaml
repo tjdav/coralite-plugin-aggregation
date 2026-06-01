@@ -1,4 +1,2 @@
 allowBuilds:
   esbuild: true
-minimumReleaseAgeExclude:
-  - coralite@0.36.1

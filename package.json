@@ -1,6 +1,6 @@
 {
   "name": "coralite-plugin-aggregation",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A Coralite plugin for dynamically collecting, filtering, sorting, and displaying content across multiple sources. Build database-free Coralite websites with automated content aggregation.",
   "type": "module",
   "keywords": [
@@ -46,7 +46,7 @@
   "devDependencies": {
     "@stylistic/eslint-plugin-js": "^4.2.0",
     "@stylistic/eslint-plugin-plus": "^4.2.0",
-    "coralite": "^0.36.1"
+    "coralite": "^0.36.3"
   },
   "packageManager": "pnpm@11.3.0+sha512.2c403d6594527287672b1f7056343a1f7c3634036a67ffabfcc2b3d7595d843768f8787148d1b57cf7956c90606bbd192857c363af19e96d2d0ec9ec5741d215"
 }
