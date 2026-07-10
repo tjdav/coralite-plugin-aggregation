@@ -5,5 +5,5 @@ export default defineConfig({
   output: './dist',
   pages: './tests/fixtures/pages',
   components: './tests/fixtures/templates',
-  plugins: [aggregation]
+  plugins: [aggregation()]
 })

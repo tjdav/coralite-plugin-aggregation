@@ -5,13 +5,12 @@
 
 <script type="module">
   import { defineComponent } from 'coralite'
-  import { aggregate } from 'aggregation'
 
   export default defineComponent({
-    data: async () => {
-      const content = await aggregate({
+    server: async (context) => {
+      const content = await context.aggregation.aggregate({
         path: ['blog'],
-        template: 'coralite-post',
+        component: 'coralite-post',
         limit: 2,
         recursive: false,
         pagination: {

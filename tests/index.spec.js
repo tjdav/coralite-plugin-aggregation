@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import { Coralite } from 'coralite'
+import { createCoralite } from 'coralite'
 import { aggregation } from '../lib/index.js'
 
 test('aggregation plugin integration', async (t) => {
@@ -11,14 +11,13 @@ test('aggregation plugin integration', async (t) => {
   const templatesDir = path.join(fixturesDir, 'templates')
 
 
-  const coralite = new Coralite({
+  const coralite = await createCoralite({
     output: 'dist',
     components: templatesDir,
     pages: pagesDir,
-    plugins: [aggregation]
+    plugins: [aggregation()]
   })
 
-  await coralite.initialise()
   const results = await coralite.build()
 
   // Verify Scenario A (/index.html)

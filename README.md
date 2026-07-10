@@ -15,19 +15,44 @@ npm install coralite-plugin-aggregation
 
 ## Usage
 
-First, register the plugin in your Coralite configuration (e.g., `coralite.config.js` or wherever you initialize Coralite).
+First, register the plugin in your Coralite configuration (`coralite.config.js` or when initializing Coralite).
 
 ```javascript
-import { Coralite } from 'coralite'
+import { createCoralite } from 'coralite'
 import aggregation from 'coralite-plugin-aggregation'
 
-const coralite = new Coralite({
-  // ... other config
-  plugins: [aggregation]
+const app = await createCoralite({
+  output: './dist',
+  pages: './src/pages',
+  components: './src/components',
+  plugins: [
+    // Instantiate the plugin by calling the factory function
+    aggregation()
+  ]
 })
 ```
 
-Then, you can use the `aggregation` function within your component.
+You can also pass pre-defined static configurations to the plugin factory:
+
+```javascript
+plugins: [
+  aggregation([
+    {
+      name: 'blog',
+      path: ['blog'],
+      component: 'coralite-post',
+      limit: 10,
+      page: 'blog.html', // Required for pre-registering pagination links in onBeforeBuild
+      pagination: {
+        segment: 'page',
+        maxVisible: 5
+      }
+    }
+  ])
+]
+```
+
+Then, you can use the aggregation functions inside your component's `server` blocks.
 
 ### Example: Blog List
 
@@ -45,18 +70,18 @@ Create a component for individual items (e.g., `components/coralite-post.html`):
   import { defineComponent } from 'coralite'
 
   export default defineComponent({
-    data: ({ page }) => {
+    server: ({ page }) => {
       return {
         url: page.url.pathname,
-        title: page.meta.title,
-        description: page.meta.description
+        title: page.meta.title || 'Untitled',
+        description: page.meta.description || ''
       }
     }
   })
 </script>
 ```
 
-Create a component to list them (e.g., `components/blog-list.html`):
+Create a component to list them (e.g., `components/blog-list.html`). You can either pass inline options:
 
 ```html
 <template id="blog-list">
@@ -67,11 +92,10 @@ Create a component to list them (e.g., `components/blog-list.html`):
 
 <script type="module">
   import { defineComponent } from 'coralite'
-  import { aggregate } from 'aggregation'
 
   export default defineComponent({
-    data: async () => {
-      const posts = await aggregate({
+    server: async (context) => {
+      const posts = await context.aggregation.aggregate({
         // Path to aggregate pages from (relative to pages directory)
         path: ['blog'],
         // Template ID to render for each item
@@ -97,9 +121,18 @@ Create a component to list them (e.g., `components/blog-list.html`):
 </script>
 ```
 
+Or reference a pre-defined static configuration by its name:
+
+```javascript
+server: async (context) => {
+  const posts = await context.aggregation.aggregate('blog')
+  return { posts }
+}
+```
+
 ## Configuration
 
-The `aggregate` function accepts an options object with the following properties:
+The `aggregate` function accepts either a configuration name `string` or an options object with the following properties:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -128,7 +161,7 @@ The `aggregate` function accepts an options object with the following properties
 The `transformState` option allows you to remap or transform the state of each aggregated item before it's passed to the item template. This is useful for mapping metadata keys to the properties expected by your component.
 
 ```javascript
-const posts = await aggregate({
+const posts = await context.aggregation.aggregate({
   path: ['blog'],
   component: 'coralite-post',
   transformState: {
@@ -146,7 +179,7 @@ const posts = await aggregate({
 
 When `pagination` is enabled and `limit` is set:
 
-1.  **Automatic Page Generation**: If placed on a root page (e.g., `/blog/index.html`), the plugin automatically generates virtual pages for subsequent pages (e.g., `/blog/page/2.html`, `/blog/page/3.html`).
+1.  **Automatic Page Generation**: During the pre-build phase (`onBeforeBuild`), the plugin automatically discovers any paginated aggregate configurations (either pre-defined or declared inline inside page components) and pre-registers virtual pages (e.g., `/blog/page/2.html`, `/blog/page/3.html`).
 2.  **Context Aware**: It detects the current page from the URL to determine the correct offset and active page state.
 3.  **Default Template**: A default Bootstrap-compatible pagination component (`coralite-pagination`) is provided out of the box.
 
